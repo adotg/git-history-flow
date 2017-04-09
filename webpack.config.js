@@ -5,7 +5,7 @@ module.exports = {
         filename: 'git-history-flow.js',
         library: 'GitHistoryFlow',
         libraryTarget: 'umd',
-		umdNamedDefine: true
+        umdNamedDefine: true
     },
     devServer: {
         inline: true,
