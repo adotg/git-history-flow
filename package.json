@@ -1,0 +1,26 @@
+{
+  "name": "git-history-flow",
+  "version": "1.0.0",
+  "description": "Visualize the evolution of a file tracked by git",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server --port 8181"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akash-goswami/git-history-flow.git"
+  },
+  "author": "Akash Goswami",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/akash-goswami/git-history-flow/issues"
+  },
+  "homepage": "https://github.com/akash-goswami/git-history-flow#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "webpack": "^2.3.3",
+    "webpack-dev-server": "^2.4.2"
+  }
+}
