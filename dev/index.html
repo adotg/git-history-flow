@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Development Test Page</title>
+</head>
+
+<body>
+    <div id="viz-container"></div>  
+    
+    <script src="http://localhost:8181/webpack-dev-server.js"></script>
+	<script src="http://localhost:8181/git-history-flow.js"></script>
+    <script type="text/javascript">
+        document.getElementById('viz-container').innerHTML = GitHistoryFlow.WELCOME_MSG;
+    </script>
+</body>
+</html>
