@@ -4,6 +4,7 @@
   "description": "Visualize the evolution of a file tracked by git",
   "main": "index.js",
   "scripts": {
+    "test": "mocha-webpack --webpack-config webpack.config-test.js \"src/**/*.spec.js\"",
     "build": "webpack",
     "start": "webpack-dev-server --port 8181"
   },
@@ -19,7 +20,9 @@
   "homepage": "https://github.com/akash-goswami/git-history-flow#readme",
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^3.19.0",
     "mocha": "^3.2.0",
+    "mocha-webpack": "^1.0.0-beta.1",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
   }
