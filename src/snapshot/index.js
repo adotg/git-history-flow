@@ -61,15 +61,15 @@ const Snapshot = class {
             
             this.hunks = this.hunks
                     .slice(0, indexToHunk)
-                    .concat(ContributionHunk.of(start, start + change - 2))
+                    .concat(ContributionHunk.of(start, start + change - 1))
                     .concat(
                         this.hunks
-                            .slice(index)
-                            .forEach((_hunk) => _hunk.shift(change))
+                            .slice(indexToHunk)
+                            .map((_hunk) => _hunk.shift(change))
                     );
 
             this.tracker = this.tracker
-                .slice(1, start)
+                .slice(0, start)
                 .concat(Array(change).fill(indexToHunk))
                 .concat(
                     this.tracker

@@ -4,7 +4,9 @@ import { default as Snapshot } from '../snapshot';
 
 describe('Snapshot', function() {
     describe('#apply', function() {
-        let firstSnapshot;
+        let firstSnapshot,
+            secondSnapshot,
+            thirdSnapshot;
         
         before(function () {
             firstSnapshot = Snapshot
@@ -15,26 +17,24 @@ describe('Snapshot', function() {
         describe('first snapshot i.e. first time commit', function () {
             it('creates only one hunk', function() {
                 expect(firstSnapshot.hunks.length).to.equal(1);
-            });
+            }); 
             
             it('creates a single hunk which represents all the lines', function() {
                 expect(firstSnapshot.hunks[0].range).to.deep.equal([1, 7]);
             });
-
+            
             it('creates a single tracker for hunks which points to a single hunk for all the lines', function() {
                 expect(firstSnapshot.tracker).to.deep.equal([null].concat(Array(7).fill(0)));
             });
         });
         
-        describe('addition of new content at the end of the file', function () {
-            let secondSnapshot;
-            
-            before(function () {
-                secondSnapshot = Snapshot
-                                    .with(firstSnapshot)
-                                    .apply([0, 0, 8, 3]);
-            });
+        before(function () {
+            secondSnapshot = Snapshot
+                                .with(firstSnapshot)
+                                .apply([0, 0, 8, 3]);
+        });
 
+        describe('addition of new content at the end of the file', function () {
             it('creates two hunks', function() {
                 expect(secondSnapshot.hunks.length).to.equal(2);
             });
@@ -46,10 +46,42 @@ describe('Snapshot', function() {
             it('creates the second hunk with range indicating the incremental changes', function() {
                 expect(secondSnapshot.hunks[1].range).to.deep.equal([8, 10]);
             });
-
+            
             it('creates a single tracker for hunks which points to hunks for all the lines', function() {
                 expect(secondSnapshot.tracker).to.deep.equal([null].concat(Array(7).fill(0))
                                                                     .concat(Array(3).fill(1)));
+            });
+        });
+        
+        before(function () {
+            thirdSnapshot = Snapshot
+                                .with(secondSnapshot)
+                                .apply([0, 0, 8, 2]);
+        });
+
+        describe('addition of new content at the middle of the file where just one hunk ends', function () {
+            it('creates three hunks', function() {
+                expect(thirdSnapshot.hunks.length).to.equal(3);
+            });
+            
+            it('retains range of the first hunk', function() {
+                expect(thirdSnapshot.hunks[0].range).to.deep.equal([1, 7]);
+            });
+            
+            it('creates the second hunk with range indicating the incremental changes', function() {
+                expect(thirdSnapshot.hunks[1].range).to.deep.equal([8, 9]);
+            });
+            
+            it('creates the third hunk with the range but shifted by the incremental change', function() {
+                expect(thirdSnapshot.hunks[2].range).to.deep.equal([10, 12]);
+            });
+
+            it('creates a single tracker for hunks which points to hunks for all the lines', function() {
+                expect(thirdSnapshot.tracker).to.deep.equal(
+                    [null]
+                        .concat(Array(7).fill(0))
+                        .concat(Array(2).fill(1))
+                        .concat(Array(3).fill(2)));
             });
         });
     });
