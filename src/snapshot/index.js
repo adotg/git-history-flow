@@ -1,15 +1,25 @@
 import { default as ContributionHunk } from '../contribution-hunk';
 
 const Snapshot = class {
-    constructor  (prevSnapshot) {
-        this.prevSnapshot = prevSnapshot;
-        
-        this.tracker = prevSnapshot && prevSnapshot.tracker.slice(0) || [null];
-        this.hunks = prevSnapshot && prevSnapshot.hunks.map(d => ContributionHunk.clone(d)) || [];
+    constructor  (prevSnapshot = Snapshot.root()) {
+        if (prevSnapshot === null) {
+            this.prevSnapshot = null;
+            this.tracker = [null];
+            this.hunks = [];
+            this._isRoot = true;
+        } else {
+            this.prevSnapshot = prevSnapshot;
+            this.tracker = prevSnapshot.tracker.slice(0);
+            this.hunks = prevSnapshot.hunks.map(d => ContributionHunk.clone(d));
+        }
     }
 
     static with (prevSnapshot) {
         return new Snapshot(prevSnapshot);
+    }
+
+    static root () {
+        return new Snapshot(null);
     }
 
     apply (command) {
