@@ -1,5 +1,7 @@
-import { expect } from 'chai'
-import { default as ContributionHunk } from '../contribution-hunk'
+/* global describe it before */
+
+import { expect } from 'chai';
+import { default as ContributionHunk } from '../contribution-hunk';
 
 
 describe('ContributionHunk ', function() {

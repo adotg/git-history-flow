@@ -34,7 +34,7 @@ const Snapshot = class {
             return this;
         }
 
-       return this; 
+        return this; 
     }
     
     _applyAddition (start, change) {

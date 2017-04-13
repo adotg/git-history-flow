@@ -1,4 +1,4 @@
-const ContributionHunk  = class {
+const ContributionHunk = class {
     constructor  (rangeStart, rangeEnd, meta) {
         this.range = [rangeStart, rangeEnd];
         this.meta = meta;
@@ -17,7 +17,7 @@ const ContributionHunk  = class {
         instance._clones.push(newHunk);
         newHunk._clonedFrom = instance;
         return newHunk;
-    };
+    }
 
     updateRange (rangeStart, rangeEnd) {
         rangeStart = isFinite(rangeStart) ? rangeStart : this.range[0];

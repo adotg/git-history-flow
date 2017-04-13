@@ -1,3 +1,5 @@
+/* global describe it before */
+
 import { expect } from 'chai';
 import { default as Snapshot } from '../snapshot';
 
