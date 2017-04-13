@@ -45,18 +45,19 @@ const Snapshot = class {
             hunk = this.hunks[indexToHunk];
             
             if(hunk.range[0] !== start) {
-                end = this.hunk.range[1];
-                this.hunk.updateRange(undefined, start - 1);
+                end = hunk.range[1];
+                hunk.updateRange(undefined, start - 1);
                 
                 this.hunks = this.hunks
-                                .slice(0, indexToHunk)
+                                .slice(0, indexToHunk + 1)
                                 .concat(ContributionHunk.of(start, end))
-                                .concat(this.hunks.slice(indexToHunk));
+                                .concat(this.hunks.slice(indexToHunk + 1));
 
                 this.tracker = this.tracker
                                 .slice(0, start)
-                                .concat(Array(end - start -1).fill(indexToHunk))
-                                .concat(this.tracker.slice(indexToHunk).map(d => d + 1));
+                                .concat(this.tracker.slice(start).map(d => d + 1));
+
+                indexToHunk++;
             }
             
             this.hunks = this.hunks
