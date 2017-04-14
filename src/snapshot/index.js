@@ -6,7 +6,6 @@ const Snapshot = class {
             this.prevSnapshot = null;
             this.tracker = [null];
             this.hunks = [];
-            this._isRoot = true;
         } else {
             this.prevSnapshot = prevSnapshot;
             this.tracker = prevSnapshot.tracker.slice(0);
@@ -20,6 +19,14 @@ const Snapshot = class {
 
     static root () {
         return new Snapshot(null);
+    }
+
+    isRoot () {
+        return !this.prevSnapshot;
+    }
+
+    prev () {
+        return this.prevSnapshot;
     }
 
     apply (command) {
