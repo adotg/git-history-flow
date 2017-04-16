@@ -54,6 +54,16 @@ describe('Walk', function () {
         walkable = walk(list);
     });
 
+    describe('#chainLength', function () {
+        it('returns length of the chain', function () {
+            expect(typeof walkable.chainLength).to.equal('number');
+        });
+        
+        it('evaluates chain length correctly', function () {
+            expect(walkable.chainLength).to.equal(5);
+        });
+    });
+
     describe('#next', function () {
         it('returns an iteraterable', function () {
             expect(typeof walkable.next).to.equal('function');

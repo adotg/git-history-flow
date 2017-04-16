@@ -9,17 +9,22 @@ const it = function* (snapshots) {
 
 const walk = (snapshot) => {
     let target,
+        itr,
+        chainLength = 0,
         snapshots = [];
     
     target = snapshot;
     while (!target.isRoot()) {
         snapshots.push(target);
         target = target.prev();
+        chainLength++;
     }
     
     snapshots = snapshots.reverse();
+    itr = it(snapshots);
+    itr.chainLength = chainLength;
     
-    return it(snapshots);
+    return itr;
 };
 
 export { walk as default };
