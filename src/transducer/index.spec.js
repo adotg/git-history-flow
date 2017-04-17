@@ -5,10 +5,10 @@ import { default as transducer } from '../transducer';
 import { default as Snapshot } from '../snapshot';
 
 const data = [
-    { changes: [0, 0, 1, 24] },
-    { changes: [19, 1, 16, 1] },
-    { changes: [12, 0, 13, 5] },
-    { changes: [12, 0, 13, 3] }
+    { changes: [0, 0, 1, 24], user: { email: 'a@domain.com' } },
+    { changes: [19, 1, 16, 1], user: { email: 'b@domain.com' } },
+    { changes: [12, 0, 13, 5], user: { email: 'c@domain.com' } },
+    { changes: [12, 0, 13, 3], user: { email: 'd@domain.com' } }
 ];
 
 
