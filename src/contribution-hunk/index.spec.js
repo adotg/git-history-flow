@@ -62,4 +62,16 @@ describe('ContributionHunk ', function() {
             expect(clone._clonedFrom).to.equal(hunk);
         });
     });
+    
+    describe('#cloneWithRange', function() {
+        let clone;
+
+        before(function () {
+            clone = ContributionHunk.cloneWithRange(hunk, 3, 6);
+        });
+
+        it('creates a clone with a specified range', function() {
+            expect(clone.range).to.deep.equal([3, 6]);
+        });
+    });
 });

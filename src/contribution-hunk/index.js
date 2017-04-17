@@ -19,6 +19,14 @@ const ContributionHunk = class {
         return newHunk;
     }
 
+    static cloneWithRange (instance, rangeStart, rangeEnd) {
+        let newHunk = new ContributionHunk(rangeStart, rangeEnd, instance.meta);
+
+        instance._clones.push(newHunk);
+        newHunk._clonedFrom = instance;
+        return newHunk;
+    }
+
     updateRange (rangeStart, rangeEnd) {
         rangeStart = isFinite(rangeStart) ? rangeStart : this.range[0];
         rangeEnd = isFinite(rangeEnd) ? rangeEnd : this.range[1];
