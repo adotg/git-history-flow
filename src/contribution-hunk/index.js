@@ -5,6 +5,7 @@ const ContributionHunk = class {
 
         this._clones = [];
         this._clonedFrom = null;
+        this.movement = 0;
     }
 
     static of (rangeStart, rangeEnd, meta) {
@@ -40,6 +41,7 @@ const ContributionHunk = class {
     shift (delta) {
         this.range[0] += delta;
         this.range[1] += delta;
+        this.movement += delta;
         return this;
     }
 };

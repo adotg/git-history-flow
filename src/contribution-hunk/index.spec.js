@@ -37,6 +37,10 @@ describe('ContributionHunk ', function() {
         it('shifts the start and end', function() {
             expect(hunk.updateRange(3, 6).shift(5).range).to.deep.equal([8, 11]);
         });
+
+        it('adds the shift to the movement', function() {
+            expect(hunk.shift(4).movement).to.equal(9);
+        });
     });
         
     describe('#clone', function() {
