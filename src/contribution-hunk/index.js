@@ -7,8 +7,8 @@ const ContributionHunk = class {
         this._clonedFrom = null;
     }
 
-    static of (rangeStart, rangeEnd) {
-        return new ContributionHunk(rangeStart, rangeEnd);
+    static of (rangeStart, rangeEnd, meta) {
+        return new ContributionHunk(rangeStart, rangeEnd, meta);
     }
 
     static clone (instance) {
