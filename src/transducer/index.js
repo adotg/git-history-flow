@@ -9,7 +9,7 @@ const userColorMap = {},
     transducer = (rawData) => {
         return rawData
                 .map(d => {
-                    return Object.assign({ }, d, { _color: getColorForUser(d.user.email) }); 
+                    return Object.assign({ }, d, { color: getColorForUser(d.user.email) }); 
                 })
                 .reduce((acc, data) => {
                     return Snapshot
