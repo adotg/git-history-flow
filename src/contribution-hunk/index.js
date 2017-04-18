@@ -1,7 +1,7 @@
 const ContributionHunk = class {
     constructor  (rangeStart, rangeEnd, meta) {
         this.range = [rangeStart, rangeEnd];
-        this.meta = meta;
+        this.meta = Object.assign({ }, meta);
 
         this._clones = [];
         this._clonedFrom = null;

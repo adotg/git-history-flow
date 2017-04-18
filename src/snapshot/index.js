@@ -1,7 +1,7 @@
 import { default as ContributionHunk } from '../contribution-hunk';
 
 const Snapshot = class {
-    constructor  (prevSnapshot = Snapshot.root()) {
+    constructor  (prevSnapshot = Snapshot.root(), data = null) {
         if (prevSnapshot === null) {
             this.prevSnapshot = null;
             this.tracker = [null];
@@ -11,10 +11,11 @@ const Snapshot = class {
             this.tracker = prevSnapshot.tracker.slice(0);
             this.hunks = prevSnapshot.hunks.map(d => ContributionHunk.clone(d));
         }
+        this.data = data;
     }
 
-    static with (prevSnapshot) {
-        return new Snapshot(prevSnapshot);
+    static with (prevSnapshot, data) {
+        return new Snapshot(prevSnapshot, data);
     }
 
     static root () {
@@ -55,7 +56,7 @@ const Snapshot = class {
         }
 
         if (this.tracker.length - 1 < start) {
-            index = this.hunks.push(ContributionHunk.of(start, start + change - 1));
+            index = this.hunks.push(ContributionHunk.of(start, start + change - 1, this.data));
             this.tracker = this.tracker.concat(Array(change).fill(index - 1));
         } else {
             indexToHunk = this.tracker[start]; 
@@ -67,7 +68,7 @@ const Snapshot = class {
                 
                 this.hunks = this.hunks
                                 .slice(0, indexToHunk + 1)
-                                .concat(ContributionHunk.of(start, end))
+                                .concat(ContributionHunk.cloneWithRange(hunk, start, end))
                                 .concat(this.hunks.slice(indexToHunk + 1));
 
                 this.tracker = this.tracker
@@ -79,7 +80,7 @@ const Snapshot = class {
             
             this.hunks = this.hunks
                     .slice(0, indexToHunk)
-                    .concat(ContributionHunk.of(start, start + change - 1))
+                    .concat(ContributionHunk.of(start, start + change - 1, this.data))
                     .concat(
                         this.hunks
                             .slice(indexToHunk)
@@ -97,6 +98,10 @@ const Snapshot = class {
         }
 
         return this;
+    }
+
+    getMax () {
+        return this.hunks[this.hunks.length - 1].range[1];
     }
 };
 
