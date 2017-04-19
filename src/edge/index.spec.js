@@ -13,7 +13,7 @@ describe('Edge', function () {
     before(function () {
         leftNode = ContributionHunk.of(10, 20, { color: '#ff0000' });
         rightNode = ContributionHunk.clone(leftNode).shift(5);
-        edge = Edge.between(leftNode, rightNode, { index: 0 }, { index: 1 });
+        edge = Edge.between(rightNode, { index: 0 }, { index: 1 });
     });
 
     describe('#between', function () {

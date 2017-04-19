@@ -1,6 +1,5 @@
 const Edge = class {
-    constructor (left, right, leftBoundary, rightBoundary) {
-        this.leftNode = left;
+    constructor (right, leftBoundary, rightBoundary) {
         this.rightNode = right;
         this.leftBoundary = leftBoundary;
         this.rightBoundary = rightBoundary;
@@ -8,8 +7,8 @@ const Edge = class {
         this.attr = right.movement;
     }
 
-    static between (left, right, leftBoundary, rightBoundary) {
-        return new Edge(left, right, leftBoundary, rightBoundary);
+    static between (right, leftBoundary, rightBoundary) {
+        return new Edge(right, leftBoundary, rightBoundary);
     }
 
     boundary () {
