@@ -28,7 +28,7 @@ describe('Edge', function () {
 
     describe('#boundary', function () {
         it('returns the boundary by value', function () {
-            expect(edge.boundary()).to.be.deep.equal([[20, 0], [10, 0], [15, 1], [25, 1]]);
+            expect(edge.boundary()).to.be.deep.equal([[0, 20], [0, 10], [1, 15], [1, 25]]);
         });
     });
     

@@ -16,15 +16,15 @@ const Edge = class {
             top = this.rightNode.range[1];
 
         return [
-            [ top - this.attr, this.leftBoundary.index],
-            [ bottom - this.attr, this.leftBoundary.index],
-            [ bottom, this.rightBoundary.index ],
-            [ top, this.rightBoundary.index ]
+            [ this.leftBoundary.index, top - this.attr ],
+            [ this.leftBoundary.index, bottom - this.attr ],
+            [ this.rightBoundary.index, bottom ],
+            [ this.rightBoundary.index, top ]
         ];
     }
 
     meta () {
-        return this.meta;
+        return this.rightNode.meta;
     }
 };
 
