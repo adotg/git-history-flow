@@ -1,6 +1,6 @@
 const d3 = require('./renderer');
 
-function chart (conf, data) {
+function chart (conf, data, edges) {
     let chartSVG,
         rootG,
         historyFlowG,
@@ -10,6 +10,7 @@ function chart (conf, data) {
         flowG,
         axisLines,
         snapshots,
+        flow,
         height,
         width,
         plotXStartPos,
@@ -104,6 +105,28 @@ function chart (conf, data) {
                 .attr('width', d => x(d.groupIndex + .05) - d._plotXStartPos) 
                 .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
                 .style('fill', d => d.hunk.meta.color);
+
+    flow = flowG 
+        .selectAll('.hf-atomic-flow-g')
+        .data(edges)
+        .enter()
+        .append('g')
+            .attr('class', '.hf-atomic-flow-g')
+            .selectAll('path')
+            .data(d => d)
+            .enter()
+            .append('path')
+                .attr('d', d => {
+                    let boundary = d.boundary();
+
+                    return 'M' + x(boundary[0][0] + 0.05) + ',' + y(boundary[0][1]) + 
+                        'L' + x(boundary[1][0] + 0.05) + ',' + y(boundary[1][1] - 1) + 
+                        'L' + x(boundary[2][0] - 0.05) + ',' + y(boundary[2][1] - 1) +  
+                        'L' + x(boundary[3][0] - 0.05) + ',' + y(boundary[3][1]) + 
+                        'Z';
+                }) 
+                .style('fill', d => d.meta().color)
+                .style('opacity', 0.5);
 }
 
 export { chart as default };
