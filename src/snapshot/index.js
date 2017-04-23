@@ -32,16 +32,70 @@ const Snapshot = class {
 
     apply (command) {
         // @temp Only addition is implemented 
-        this._applyAddition(command[2], command[3]);
+        this
+            ._applyRemove(command[0], command[1])
+            ._applyAddition(command[2], command[3]);
 
         return this;
     }
 
     _applyRemove (start, change) {
+        let startHunkIndex,
+            endHunkIndex,
+            hunk,
+            hunkTop,
+            hunkBottom,
+            end;
+
         if (!change) {
             return this;
         }
 
+        startHunkIndex = this.tracker[start];
+        endHunkIndex = this.tracker[end = start + change - 1];
+
+        if (startHunkIndex === endHunkIndex) {
+            hunk = this.hunks[startHunkIndex];
+            
+            this.hunks = this.hunks
+                            .slice(0, startHunkIndex + 1)
+                            .concat(ContributionHunk.of(start, end).removable(true))
+                            .concat(ContributionHunk.cloneWithRange(hunk, end + 1))
+                            .concat(this.hunks.slice(startHunkIndex + 1));
+            
+            hunk.updateRange(undefined, start - 1);
+        } else {
+            hunkTop = this.hunks[startHunkIndex];
+            hunkBottom = this.hunks[endHunkIndex];
+            
+            this.hunks = this.hunks
+                            .slice(0, startHunkIndex + 1)
+                            .concat(ContributionHunk.of(start, hunkTop.range[1]).removable(true))
+                            .concat(this.hunks.slice(startHunkIndex + 1, endHunkIndex).map(h => h.removable(true)))
+                            .concat(ContributionHunk.cloneWithRange(hunkBottom, undefined, end).removable(true))
+                            .concat(ContributionHunk.cloneWithRange(hunkBottom, end + 1))
+                            .concat(this.hunks.slice(endHunkIndex + 1));
+        
+            hunkTop.updateRange(undefined, start - 1);
+            hunkBottom.updateRange(end + 1);
+        }
+
+        this.hunks.reduce((acc, _hunk, i) => {
+            if (!_hunk.removeFlag) {
+                _hunk.shift(-acc.delta);
+            } else {
+                acc.delta += _hunk.range[1] - _hunk.range[0] + 1;
+                acc.removables.push(i);
+            }
+
+            return acc;
+        }, { delta: 0, removables: [] });
+
+        this.hunks = this.hunks.filter(_hunk => !_hunk.removeFlag);
+        this.tracker = this.hunks.reduce((acc, _hunk, i) => {
+            return acc.concat(Array(_hunk.range[1] - _hunk.range[0] + 1).fill(i));
+        }, [null]);
+        
         return this; 
     }
     
