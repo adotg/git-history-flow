@@ -87,6 +87,29 @@ function chart (conf, data, edges) {
                 let xVal = x(i);
                 return 'M' + xVal + ',0' + 'L' + xVal + ',' + effectiveHeight;
             });
+    
+    // For testing ----------
+    axisLines = axisLinesG
+        .append('g')
+        .selectAll('path')
+        .data(Array(yMax + 1).fill(1).map((d, i) => i))
+        .enter()
+        .append('path')
+            .attr('d', (d) => { 
+                let yVal = y(d);
+                return 'M0,' + yVal + 'L' + (width - 2 * padding.w) + ',' + yVal;
+            });
+
+    axisLines = axisLinesG
+        .append('g')
+        .selectAll('text')
+        .data(Array(yMax + 1).fill(1).map((d, i) => i))
+        .enter()
+        .append('text')
+            .text(d => d)
+            .attr('x', -25)
+            .attr('y', d => y(d));
+    // ------------- Till this
 
     snapshots = snapshotG 
         .selectAll('.hf-atomic-snapshot-g')
