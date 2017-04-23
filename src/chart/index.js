@@ -6,14 +6,12 @@ function chart (conf, data, edges) {
         historyFlowG,
         timelineG,
         axisLinesG,
+        yAxisLinesG,
+        xAxisLinesG,
         snapshotG,
         flowG,
-        axisLines,
-        snapshots,
-        flow,
         height,
         width,
-        plotXStartPos,
         x,
         y,
         yMax,
@@ -46,10 +44,21 @@ function chart (conf, data, edges) {
     timelineG = rootG 
         .append('g')
             .attr('class', 'hf-timeline-group');
+   
+    // To bypass the lint error for not using the variable
+    timelineG.attr();
 
     axisLinesG = historyFlowG
         .append('g')
             .attr('class', 'hf-axislines-group');
+    
+    yAxisLinesG = axisLinesG
+        .append('g')
+            .attr('class', 'hf-y-axislines-group');
+    
+    xAxisLinesG = axisLinesG
+        .append('g')
+            .attr('class', 'hf-x-axislines-group');
     
     snapshotG = historyFlowG
         .append('g')
@@ -78,7 +87,7 @@ function chart (conf, data, edges) {
         .domain([0, yMax])
         .range([0, effectiveHeight = height - 2 * padding.w]);
 
-    axisLines = axisLinesG
+    yAxisLinesG 
         .selectAll('path')
         .data(data)
         .enter()
@@ -88,8 +97,7 @@ function chart (conf, data, edges) {
                 return 'M' + xVal + ',0' + 'L' + xVal + ',' + effectiveHeight;
             });
     
-    // For testing ----------
-    axisLines = axisLinesG
+    xAxisLinesG
         .append('g')
         .selectAll('path')
         .data(Array(yMax + 1).fill(1).map((d, i) => i))
@@ -100,18 +108,20 @@ function chart (conf, data, edges) {
                 return 'M0,' + yVal + 'L' + (width - 2 * padding.w) + ',' + yVal;
             });
 
-    axisLines = axisLinesG
+    // For testing ----------
+    axisLinesG
         .append('g')
         .selectAll('text')
         .data(Array(yMax + 1).fill(1).map((d, i) => i))
         .enter()
         .append('text')
-            .text(d => d)
+            .text(d => d ? d : '')
             .attr('x', -25)
-            .attr('y', d => y(d));
+            .attr('y', d => y(d))
+            .attr('dy', '-0.35em');
     // ------------- Till this
 
-    snapshots = snapshotG 
+    snapshotG 
         .selectAll('.hf-atomic-snapshot-g')
         .data(data)
         .enter()
@@ -129,7 +139,7 @@ function chart (conf, data, edges) {
                 .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
                 .style('fill', d => d.hunk.meta.color);
 
-    flow = flowG 
+    flowG 
         .selectAll('.hf-atomic-flow-g')
         .data(edges)
         .enter()
