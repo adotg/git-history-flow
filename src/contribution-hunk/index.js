@@ -6,6 +6,7 @@ const ContributionHunk = class {
         this._clones = [];
         this._clonedFrom = null;
         this.movement = 0;
+        this.removeFlag = rangeStart > rangeEnd ? true : false;
     }
 
     static of (rangeStart, rangeEnd, meta) {
@@ -21,7 +22,10 @@ const ContributionHunk = class {
     }
 
     static cloneWithRange (instance, rangeStart, rangeEnd) {
-        let newHunk = new ContributionHunk(rangeStart, rangeEnd, instance.meta);
+        let newHunk = new ContributionHunk(
+            rangeStart || instance.range[0], 
+            rangeEnd || instance.range[1], 
+            instance.meta);
 
         instance._clones.push(newHunk);
         newHunk._clonedFrom = instance;
@@ -34,6 +38,7 @@ const ContributionHunk = class {
 
         this.range[0] = rangeStart;
         this.range[1] = rangeEnd;
+        this.removeFlag = rangeStart > rangeEnd ? true : false;
 
         return this;
     }
@@ -42,6 +47,11 @@ const ContributionHunk = class {
         this.range[0] += delta;
         this.range[1] += delta;
         this.movement += delta;
+        return this;
+    }
+
+    removable (flag) {
+        this.removeFlag = flag;
         return this;
     }
 };
