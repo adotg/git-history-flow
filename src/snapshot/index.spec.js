@@ -10,7 +10,8 @@ describe('Snapshot', function() {
             secondSnapshot,
             thirdSnapshot,
             fourthSnapshot,
-            fifthSnapshot;
+            fifthSnapshot,
+            sixthSnapshot;
         
         before(function () {
             firstSnapshot = Snapshot
@@ -52,8 +53,7 @@ describe('Snapshot', function() {
             });
             
             it('creates a single tracker for hunks which points to hunks for all the lines', function() {
-                expect(secondSnapshot.tracker).to.deep.equal([null].concat(Array(7).fill(0))
-                                                                    .concat(Array(3).fill(1)));
+                expect(secondSnapshot.tracker).to.deep.equal([null].concat(Array(7).fill(0)).concat(Array(3).fill(1)));
             });
         });
         
@@ -150,6 +150,30 @@ describe('Snapshot', function() {
                         .concat(Array(1).fill(2))
                         .concat(Array(2).fill(3))
                         .concat(Array(3).fill(4)));
+            });
+        });
+
+        before(function () {
+            sixthSnapshot = Snapshot
+                                .with(fifthSnapshot)
+                                .apply([3, 2, 1, 0]);
+        });
+
+        describe('deletion of content which spans only one hunk', function () {
+            it('splits the hunk in the middle to create thre hunk, deletes the middle hunk to leave with two hunks',
+                function () {
+                    expect(sixthSnapshot.hunks.length).to.equal(6);
+                });
+            
+            it('updates the tracker to indicate the split of the hunk which has been affected', function () {
+                expect(sixthSnapshot.tracker).to.deep.equal(
+                    [null]
+                        .concat(Array(2).fill(0))
+                        .concat(Array(2).fill(1))
+                        .concat(Array(1).fill(2))
+                        .concat(Array(1).fill(3))
+                        .concat(Array(2).fill(4))
+                        .concat(Array(3).fill(5)));
             });
         });
     });
