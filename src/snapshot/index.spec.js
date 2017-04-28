@@ -5,7 +5,7 @@ import { default as Snapshot } from '../snapshot';
 
 
 describe('Snapshot', function() {
-    describe('#apply', function() {
+    describe('#transact', function() {
         let firstSnapshot,
             secondSnapshot,
             thirdSnapshot,
@@ -16,7 +16,7 @@ describe('Snapshot', function() {
         before(function () {
             firstSnapshot = Snapshot
                             .with()
-                            .apply([0, 0, 1, 7]);
+                            .transact([[0, 0, 1, 7]]);
         });
         
         describe('first snapshot i.e. first time commit', function () {
@@ -36,7 +36,7 @@ describe('Snapshot', function() {
         before(function () {
             secondSnapshot = Snapshot
                                 .with(firstSnapshot)
-                                .apply([0, 0, 8, 3]);
+                                .transact([[0, 0, 8, 3]]);
         });
 
         describe('addition of new content at the end of the file', function () {
@@ -60,7 +60,7 @@ describe('Snapshot', function() {
         before(function () {
             thirdSnapshot = Snapshot
                                 .with(secondSnapshot)
-                                .apply([0, 0, 8, 2]);
+                                .transact([[0, 0, 8, 2]]);
         });
 
         describe('addition of new content at the middle of the file where just one hunk starts', function () {
@@ -92,7 +92,7 @@ describe('Snapshot', function() {
         before(function () {
             fourthSnapshot = Snapshot
                                 .with(thirdSnapshot)
-                                .apply([0, 0, 5, 1]);
+                                .transact([[0, 0, 5, 1]]);
         });
 
         describe('addition of new content in middle of a hunk', function () {
@@ -126,7 +126,7 @@ describe('Snapshot', function() {
         before(function () {
             fifthSnapshot = Snapshot
                                 .with(thirdSnapshot)
-                                .apply([0, 0, 7, 1]);
+                                .transact([[0, 0, 7, 1]]);
         });
         
         describe('addition of new content where the hunk ends', function () {
@@ -156,7 +156,7 @@ describe('Snapshot', function() {
         before(function () {
             sixthSnapshot = Snapshot
                                 .with(fifthSnapshot)
-                                .apply([3, 2, 1, 0]);
+                                .transact([[3, 2, 1, 0]]);
         });
 
         describe('deletion of content which spans only one hunk', function () {

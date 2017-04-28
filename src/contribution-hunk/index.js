@@ -18,6 +18,7 @@ const ContributionHunk = class {
 
         instance._clones.push(newHunk);
         newHunk._clonedFrom = instance;
+    
         return newHunk;
     }
 
@@ -29,6 +30,7 @@ const ContributionHunk = class {
 
         instance._clones.push(newHunk);
         newHunk._clonedFrom = instance;
+        newHunk.movement = instance.movement;
         return newHunk;
     }
 

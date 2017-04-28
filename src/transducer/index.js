@@ -14,7 +14,7 @@ const userColorMap = {},
                 .reduce((acc, data) => {
                     return Snapshot
                             .with(acc, data)
-                            .apply(data.diff.changes); 
+                            .transact(data.diff.changes); 
                 }, Snapshot.root());
     };
 

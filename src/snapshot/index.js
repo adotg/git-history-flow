@@ -30,16 +30,26 @@ const Snapshot = class {
         return this.prevSnapshot;
     }
 
-    apply (command) {
-        // @temp Only addition is implemented 
-        this
-            ._applyRemove(command[0], command[1])
-            ._applyAddition(command[2], command[3]);
+    transact (commands) {
+        let deleted,
+            added,
+            delta = 0;
+
+        commands.forEach(command => {
+            deleted = command[1];
+            added = command[3];
+
+            this
+                ._atomicRemoveTransaction(command[0], deleted, delta)
+                ._atomicAdditionTransaction(command[2], added, delta);
+
+            delta += (-deleted + added);
+        });
 
         return this;
     }
 
-    _applyRemove (start, change) {
+    _atomicRemoveTransaction (start, change, delta) {
         let startHunkIndex,
             endHunkIndex,
             hunk,
@@ -50,6 +60,8 @@ const Snapshot = class {
         if (!change) {
             return this;
         }
+    
+        start += delta;
 
         startHunkIndex = this.tracker[start];
         endHunkIndex = this.tracker[end = start + change - 1];
@@ -99,7 +111,7 @@ const Snapshot = class {
         return this; 
     }
     
-    _applyAddition (start, change) {
+    _atomicAdditionTransaction (start, change) {
         let index,
             hunk,
             indexToHunk,
