@@ -3,7 +3,10 @@
 TARGET_FILE="$1"
 # Saves function output
 FN_OP= 
+# Contains final output
+JSON_AS_STRING=
 
+# Make a json of one depth
 maker() {
     local new_obj=
     local i=
@@ -27,6 +30,7 @@ maker() {
     echo $new_obj
 }
 
+# Insert a key valur pair at the end of the json at the top most level
 insert_at_last() {
     local open_obj=
 
@@ -70,6 +74,7 @@ extract_changes() {
     echo $op 
 }
 
+# Extracts the addition and deleton inf form the commit log
 process() {
     local i=
     local line_list=
@@ -119,8 +124,11 @@ diffable() {
     process "$res" $false
 }
 
-# Split the string sepatated by new line character in list
+JSON_AS_STRING="[ "
+
+# Pretty print the log in the json format
 DIFF_COMMITS=`git log --pretty="{ \"commitId\": \"%h\", \"desc\": \"%s\", \"timestamp\": \"%ci\", \"user\": { \"name\": \"%cn\", \"email\": \"%ce\" } }" --reverse wercker.yml`
+# Split the string sepatated by new line character in list
 IFS=$'\n' read -rd '' -a COMMITS_LIST <<<"$DIFF_COMMITS" 
 
 for (( i = 0; i < ${#COMMITS_LIST[*]}; ++ i ))
@@ -138,6 +146,19 @@ do
     fi
     
     OP=`insert_at_last "$item" "diff" "$FN_OP"`
+    JSON_AS_STRING+=$OP;
+    JSON_AS_STRING+=","
+
     PREV_COMMIT_ID=$COMMIT_ID
-    echo "$OP"
 done
+    
+JSON_AS_STRING=`echo "$JSON_AS_STRING" | sed 's/.$//'`
+JSON_AS_STRING+=" ]"
+
+# Redirect the output to console or to a file
+if [ $# -eq 1 ]
+then
+    echo "$JSON_AS_STRING"
+else
+    echo $JSON_AS_STRING > $2 
+fi
