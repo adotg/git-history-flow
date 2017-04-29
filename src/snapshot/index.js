@@ -11,7 +11,7 @@ const Snapshot = class {
             this.tracker = prevSnapshot.tracker.slice(0);
             this.hunks = prevSnapshot.hunks.map(d => ContributionHunk.clone(d));
         }
-        this.data = data;
+        this.data = this._parse(data);
     }
 
     static with (prevSnapshot, data) {
@@ -28,6 +28,19 @@ const Snapshot = class {
 
     prev () {
         return this.prevSnapshot;
+    }
+
+    _parse (data) {
+        let parsedData;
+
+        if (!data) {
+            return null;
+        }
+        
+        parsedData = Object.assign({}, data);
+        parsedData.timestamp = new Date(parsedData.timestamp);
+       
+        return parsedData;
     }
 
     transact (commands) {

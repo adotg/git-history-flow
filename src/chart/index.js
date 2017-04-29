@@ -16,6 +16,7 @@ function chart (conf, data, edges) {
         width,
         x,
         y,
+        timeX,
         yMax,
         effectiveHeight,
         padding;
@@ -55,10 +56,6 @@ function chart (conf, data, edges) {
         .append('g')
         .attr('class', 'hf-timeline-snapshot');
 
-    // @temp to bypass lint errors
-    timelineSnapshotG.attr();
-
-
     axisLinesG = historyFlowG
         .append('g')
             .attr('class', 'hf-axislines-group');
@@ -82,6 +79,11 @@ function chart (conf, data, edges) {
     x = d3
         .scaleLinear()
         .domain([0, data.length - 1])
+        .range([0, width - 2 * padding.w]);
+
+    timeX = d3
+        .scaleTime()
+        .domain([data[0].data.timestamp, data[data.length - 1].data.timestamp])
         .range([0, width - 2 * padding.w]);
 
     yMax = data
@@ -168,6 +170,15 @@ function chart (conf, data, edges) {
                 }) 
                 .style('fill', d => d.meta().color)
                 .style('opacity', 0.5);
+
+    timelineSnapshotG
+        .selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+            .attr('cx', d => timeX(d.data.timestamp))
+            .attr('cy', () => height - 2 * padding.h)
+            .attr('r', 7);
 }
 
 export { chart as default };
