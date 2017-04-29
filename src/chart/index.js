@@ -5,6 +5,8 @@ function chart (conf, data, edges) {
         rootG,
         historyFlowG,
         timelineG,
+        timelineBaseG,
+        timelineSnapshotG,
         axisLinesG,
         yAxisLinesG,
         xAxisLinesG,
@@ -44,9 +46,18 @@ function chart (conf, data, edges) {
     timelineG = rootG 
         .append('g')
             .attr('class', 'hf-timeline-group');
-   
-    // To bypass the lint error for not using the variable
-    timelineG.attr();
+    
+    timelineBaseG = timelineG
+        .append('g')
+        .attr('class', 'hf-timeline-base');
+
+    timelineSnapshotG = timelineG
+        .append('g')
+        .attr('class', 'hf-timeline-snapshot');
+
+    // @temp to bypass lint errors
+    timelineSnapshotG.attr();
+
 
     axisLinesG = historyFlowG
         .append('g')
@@ -85,7 +96,7 @@ function chart (conf, data, edges) {
     y = d3
         .scaleLinear()
         .domain([0, yMax])
-        .range([0, effectiveHeight = height - 2 * padding.w]);
+        .range([0, effectiveHeight = height - 2 * padding.h - 50]); // 50px for the timeline drawing
 
     yAxisLinesG 
         .selectAll('path')
@@ -108,18 +119,15 @@ function chart (conf, data, edges) {
                 return 'M0,' + yVal + 'L' + (width - 2 * padding.w) + ',' + yVal;
             });
 
-    // For testing ----------
-    axisLinesG
-        .append('g')
-        .selectAll('text')
-        .data(Array(yMax + 1).fill(1).map((d, i) => i))
+    timelineBaseG
+        .selectAll('path')
+        .data([1])
         .enter()
-        .append('text')
-            .text(d => d ? d : '')
-            .attr('x', -25)
-            .attr('y', d => y(d))
-            .attr('dy', '-0.35em');
-    // ------------- Till this
+        .append('path')
+            .attr('d', () => { 
+                let yVal = height - 2 * padding.h;
+                return 'M0,' + yVal + 'L' + (width - 2 * padding.w) + ',' + yVal;
+            });
 
     snapshotG 
         .selectAll('.hf-atomic-snapshot-g')
