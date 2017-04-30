@@ -24,8 +24,9 @@ function chart (conf, data, edges) {
         yMax,
         effectiveHeight,
         padding,
+        dayDurationInPx,
         smartlabel = new SmartLabelManager(0);
-    
+
     chartSVG = 
         d3.select(conf.mountPoint)
             .append('svg')
@@ -92,7 +93,7 @@ function chart (conf, data, edges) {
 
     timeX = d3
         .scaleTime()
-        .domain([data[0].data.timestamp, data[data.length - 1].data.timestamp])
+        .domain([utils.getNiceDate(data[0].data.timestamp), utils.getNiceDate(data[data.length - 1].data.timestamp, 1)])
         .range([0, width - 2 * padding.w]);
 
     yMax = data
@@ -205,15 +206,17 @@ function chart (conf, data, edges) {
                 }) 
                 .style('fill', d => d.meta().color)
                 .style('opacity', 0.5);
-
+    
+    dayDurationInPx = timeX(new Date(1970, 0, 2)) - timeX(new Date(1970, 0, 1));
     timelineSnapshotG
         .selectAll('circle')
         .data(data)
         .enter()
-        .append('circle')
-            .attr('cx', d => timeX(d.data.timestamp))
-            .attr('cy', () => height - 2 * padding.h)
-            .attr('r', 7);
+        .append('rect')
+            .attr('x', d => timeX(utils.getNiceDate(d.data.timestamp)))
+            .attr('y', () => height - 2 * padding.h - 6)
+            .attr('height', 12)
+            .attr('width', dayDurationInPx)
 }
 
 export { chart as default };
