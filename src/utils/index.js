@@ -16,6 +16,19 @@ utils.palette = () => {
     return { size, next, reset }; 
 };
 
+utils.ISO8601toNativeDate = (isoString) => {
+    let isoDateArr = isoString.split(/\s+/),
+        dateCompArr = isoDateArr[0].split('-').map(d => parseInt(d)),
+        timeCompArr = isoDateArr[1].split(':').map(d => parseInt(d));
+
+    return new Date(dateCompArr[0], dateCompArr[1] - 1, dateCompArr[2], 
+        timeCompArr[0], timeCompArr[1], timeCompArr[2]);
+};
+
+utils.getNiceDate = (date, towards = 0) => {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + towards);
+};
+
 utils.niceDateTicks = (d1, d2) => {
     let dayFraction, 
         diffInMS = d2.getTime() - d1.getTime();

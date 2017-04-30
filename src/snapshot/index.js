@@ -1,4 +1,5 @@
 import { default as ContributionHunk } from '../contribution-hunk';
+import { default as utils } from '../utils';
 
 const Snapshot = class {
     constructor  (prevSnapshot = Snapshot.root(), data = null) {
@@ -38,7 +39,7 @@ const Snapshot = class {
         }
         
         parsedData = Object.assign({}, data);
-        parsedData.timestamp = new Date(parsedData.timestamp);
+        parsedData.timestamp = utils.ISO8601toNativeDate(parsedData.timestamp);
        
         return parsedData;
     }
