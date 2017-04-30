@@ -113,7 +113,7 @@ function chart (conf, data, edges) {
     xAxisLinesG
         .append('g')
         .selectAll('path')
-        .data(Array(yMax + 1).fill(1).map((d, i) => i))
+        .data([0])
         .enter()
         .append('path')
             .attr('d', (d) => { 
