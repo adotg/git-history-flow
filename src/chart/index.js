@@ -161,7 +161,7 @@ function chart (conf, data, edges) {
             })
             .attr('y', () => {
                 let yVal = height - 2 * padding.h;
-                return yVal - smartlabel.getOriSize('W').height;
+                return yVal + smartlabel.getOriSize('W').height * 1.5;
             })
             .style('font-family', 'monospace')
             .style('font-size', '10px');
