@@ -1,4 +1,7 @@
 const d3 = require('./renderer');
+const SmartLabelManager = require('fusioncharts-smartlabel');
+
+import { default as utils } from '../utils';
 
 function chart (conf, data, edges) {
     let chartSVG,
@@ -7,6 +10,7 @@ function chart (conf, data, edges) {
         timelineG,
         timelineBaseG,
         timelineSnapshotG,
+        timelineTextG,
         axisLinesG,
         yAxisLinesG,
         xAxisLinesG,
@@ -19,7 +23,8 @@ function chart (conf, data, edges) {
         timeX,
         yMax,
         effectiveHeight,
-        padding;
+        padding,
+        smartlabel = new SmartLabelManager(0);
     
     chartSVG = 
         d3.select(conf.mountPoint)
@@ -55,6 +60,10 @@ function chart (conf, data, edges) {
     timelineSnapshotG = timelineG
         .append('g')
         .attr('class', 'hf-timeline-snapshot');
+
+    timelineTextG = timelineG
+        .append('g')
+        .attr('class', 'hf-timeline-text');
 
     axisLinesG = historyFlowG
         .append('g')
@@ -130,6 +139,32 @@ function chart (conf, data, edges) {
                 let yVal = height - 2 * padding.h;
                 return 'M0,' + yVal + 'L' + (width - 2 * padding.w) + ',' + yVal;
             });
+    
+    smartlabel.setStyle({
+        'font-size': '10px',
+        'font-family': 'monospace'
+    });
+    timelineTextG
+        .selectAll('text')
+        .data(utils.niceDateTicks(data[0].data.timestamp, data[data.length - 1].data.timestamp))
+        .enter('text')
+        .append('text')
+            .text(d => d)
+            .attr('text-anchor', 'middle')
+            .attr('x', (d, i) => {
+                let dim = smartlabel.getOriSize(d);
+                if (i) {
+                    return x(data.length - 1) - dim.width * 1 / 4; 
+                } else {
+                    return x(0) + dim.width * 1 / 4;
+                }
+            })
+            .attr('y', () => {
+                let yVal = height - 2 * padding.h;
+                return yVal - smartlabel.getOriSize('W').height;
+            })
+            .style('font-family', 'monospace')
+            .style('font-size', '10px');
 
     snapshotG 
         .selectAll('.hf-atomic-snapshot-g')
