@@ -1,4 +1,4 @@
-import { default as Snapshot } from '../snapshot';
+import { Snapshot } from '../snapshot';
 import { default as utils } from '../utils';
 
 const userColorMap = {},

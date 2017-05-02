@@ -2,7 +2,7 @@
 
 import { expect } from 'chai';
 import { default as transducer } from '../transducer';
-import { default as Snapshot } from '../snapshot';
+import { Snapshot } from '../snapshot';
 
 const data = [
     { diff: { changes: [0, 0, 1, 24] }, user: { email: 'a@domain.com' }, 'timestamp': '2017-03-01 20:54:47 +0530' },
