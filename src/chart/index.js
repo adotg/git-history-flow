@@ -216,7 +216,7 @@ function chart (conf, data, edges) {
             .attr('x', d => timeX(utils.getNiceDate(d.data.timestamp)))
             .attr('y', () => height - 2 * padding.h - 6)
             .attr('height', 12)
-            .attr('width', dayDurationInPx)
+            .attr('width', dayDurationInPx);
 }
 
 export { chart as default };
