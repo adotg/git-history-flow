@@ -2,6 +2,9 @@ import { default as transducer } from './transducer';
 import { default as walk } from './walk';
 import { default as chart } from './chart';
 import { default as Edge } from './edge';
+import { default as store } from './store';
+
+console.log(store.getState());
 
 const render = (conf, data) => {
     let walkable,
