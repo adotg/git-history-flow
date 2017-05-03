@@ -2,7 +2,7 @@
 
 import { expect } from 'chai';
 import { default as Edge } from '../edge';
-import { default as ContributionHunk } from '../contribution-hunk';
+import { ContributionHunk } from '../contribution-hunk';
 
 
 describe('Edge', function () {
