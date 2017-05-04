@@ -1,8 +1,8 @@
 import { default as transducer } from './transducer';
 import { default as walk } from './walk';
 import { default as chart } from './chart';
-import { default as Edge } from './edge';
 import { default as store } from './store';
+import { Edge, EdgeSemantics, EdgePresentation } from './edge';
 import { SnapshotSemantics, SnapshotPresentation } from './snapshot';
 
 import { changeMode } from './actions';
@@ -22,8 +22,6 @@ const render = (conf, data) => {
         res,
         i,
         l,
-        ssSemantical,
-        ssPresentational,
         transducedRes,
         snapshots = [],
         edges = []; 
@@ -43,11 +41,11 @@ const render = (conf, data) => {
             .map(hunk => Edge.between(hunk, { index: i - 1 }, { index: i })));
     }
 
-    ssSemantical = new SnapshotSemantics(snapshots, store);
-    ssPresentational = new SnapshotPresentation(ssSemantical);
-    ssSemantical.connect(ssPresentational);
-
-    return chart(conf, ssSemantical, edges);
+    return chart(
+        conf, 
+        new SnapshotSemantics(snapshots, store).connect(new SnapshotPresentation()),
+        new EdgeSemantics(edges, store).connect(new EdgePresentation())
+    );
 }
 
 export { render as render };

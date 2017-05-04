@@ -1,4 +1,4 @@
-const SnapshotSemantics = class {
+const EdgeSemantics = class {
     constructor  (data, store) {
         this.data = data;
         this.store = store;
@@ -13,7 +13,7 @@ const SnapshotSemantics = class {
     connect (presentation) {
         this.presentation = presentation;
         this.presentation.setData(this.getData());
-        
+
         return this;
     }
 
@@ -27,4 +27,4 @@ const SnapshotSemantics = class {
     }
 };
 
-export { SnapshotSemantics as default };
+export { EdgeSemantics as default };

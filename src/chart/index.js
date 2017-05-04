@@ -3,7 +3,7 @@ const SmartLabelManager = require('fusioncharts-smartlabel');
 
 import { default as utils } from '../utils';
 
-function chart (conf, snapshot, edges) {
+function chart (conf, snapshot, edge) {
     let chartSVG,
         rootG,
         historyFlowG,
@@ -169,45 +169,7 @@ function chart (conf, snapshot, edges) {
             .style('font-size', '10px');
 
     snapshot.render(snapshotG, {x: x, y: y});
-    //snapshotG 
-        //.selectAll('.hf-atomic-snapshot-g')
-        //.data(data)
-        //.enter()
-        //.append('g')
-            //.attr('class', '.hf-atomic-snapshot-g')
-            //.selectAll('rect')
-            //.data((d, i) => 
-                //d.hunks.map(hunk => 
-                    //({ hunk: hunk, groupIndex: i })))
-            //.enter()
-            //.append('rect')
-                //.attr('x', d => d._plotXStartPos = x(d.groupIndex - .05)) 
-                //.attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1)) 
-                //.attr('width', d => x(d.groupIndex + .05) - d._plotXStartPos) 
-                //.attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
-                //.style('fill', d => d.hunk.meta.color);
-
-    flowG 
-        .selectAll('.hf-atomic-flow-g')
-        .data(edges)
-        .enter()
-        .append('g')
-            .attr('class', '.hf-atomic-flow-g')
-            .selectAll('path')
-            .data(d => d)
-            .enter()
-            .append('path')
-                .attr('d', d => {
-                    let boundary = d.boundary();
-
-                    return 'M' + x(boundary[0][0] + 0.05) + ',' + y(boundary[0][1]) + 
-                        'L' + x(boundary[1][0] + 0.05) + ',' + y(boundary[1][1] - 1) + 
-                        'L' + x(boundary[2][0] - 0.05) + ',' + y(boundary[2][1] - 1) +  
-                        'L' + x(boundary[3][0] - 0.05) + ',' + y(boundary[3][1]) + 
-                        'Z';
-                }) 
-                .style('fill', d => d.meta().color)
-                .style('opacity', 0.5);
+    edge.render(flowG, {x: x, y: y});
     
     dayDurationInPx = timeX(new Date(1970, 0, 2)) - timeX(new Date(1970, 0, 1));
     timelineSnapshotG

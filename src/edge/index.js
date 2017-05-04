@@ -1,31 +1,5 @@
-const Edge = class {
-    constructor (right, leftBoundary, rightBoundary) {
-        this.rightNode = right;
-        this.leftBoundary = leftBoundary;
-        this.rightBoundary = rightBoundary;
+import { default as Edge } from './edge.js';
+import { default as EdgeSemantics } from './index.semantical.js';
+import { default as EdgePresentation } from './index.presentational.js';
 
-        this.attr = right.movement;
-    }
-
-    static between (right, leftBoundary, rightBoundary) {
-        return new Edge(right, leftBoundary, rightBoundary);
-    }
-
-    boundary () {
-        let bottom = this.rightNode.range[0],
-            top = this.rightNode.range[1];
-
-        return [
-            [ this.leftBoundary.index, top - this.attr ],
-            [ this.leftBoundary.index, bottom - this.attr ],
-            [ this.rightBoundary.index, bottom ],
-            [ this.rightBoundary.index, top ]
-        ];
-    }
-
-    meta () {
-        return this.rightNode.meta;
-    }
-};
-
-export { Edge as default };
+export { Edge, EdgeSemantics, EdgePresentation };

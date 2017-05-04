@@ -1,7 +1,7 @@
 /* global describe it before */
 
 import { expect } from 'chai';
-import { default as Edge } from '../edge';
+import { Edge } from '../edge';
 import { default as ContributionHunk } from '../contribution-hunk';
 
 
