@@ -33,6 +33,7 @@
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
+    "color": "^1.0.3",
     "d3-scale": "^1.0.5",
     "d3-selection": "^1.0.5",
     "fusioncharts-smartlabel": "^1.0.2",
