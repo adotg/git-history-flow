@@ -3,7 +3,7 @@ const SmartLabelManager = require('fusioncharts-smartlabel');
 
 import { default as utils } from '../utils';
 
-function chart (conf, data, edges) {
+function chart (conf, snapshot, edges) {
     let chartSVG,
         rootG,
         historyFlowG,
@@ -25,7 +25,8 @@ function chart (conf, data, edges) {
         effectiveHeight,
         padding,
         dayDurationInPx,
-        smartlabel = new SmartLabelManager(0);
+        smartlabel = new SmartLabelManager(0),
+        data = snapshot.getData();
 
     chartSVG = 
         d3.select(conf.mountPoint)
@@ -167,23 +168,24 @@ function chart (conf, data, edges) {
             .style('font-family', 'monospace')
             .style('font-size', '10px');
 
-    snapshotG 
-        .selectAll('.hf-atomic-snapshot-g')
-        .data(data)
-        .enter()
-        .append('g')
-            .attr('class', '.hf-atomic-snapshot-g')
-            .selectAll('rect')
-            .data((d, i) => 
-                d.hunks.map(hunk => 
-                    ({ hunk: hunk, groupIndex: i })))
-            .enter()
-            .append('rect')
-                .attr('x', d => d._plotXStartPos = x(d.groupIndex - .05)) 
-                .attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1)) 
-                .attr('width', d => x(d.groupIndex + .05) - d._plotXStartPos) 
-                .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
-                .style('fill', d => d.hunk.meta.color);
+    snapshot.render(snapshotG, {x: x, y: y});
+    //snapshotG 
+        //.selectAll('.hf-atomic-snapshot-g')
+        //.data(data)
+        //.enter()
+        //.append('g')
+            //.attr('class', '.hf-atomic-snapshot-g')
+            //.selectAll('rect')
+            //.data((d, i) => 
+                //d.hunks.map(hunk => 
+                    //({ hunk: hunk, groupIndex: i })))
+            //.enter()
+            //.append('rect')
+                //.attr('x', d => d._plotXStartPos = x(d.groupIndex - .05)) 
+                //.attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1)) 
+                //.attr('width', d => x(d.groupIndex + .05) - d._plotXStartPos) 
+                //.attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
+                //.style('fill', d => d.hunk.meta.color);
 
     flowG 
         .selectAll('.hf-atomic-flow-g')

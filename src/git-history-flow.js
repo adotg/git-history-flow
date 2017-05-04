@@ -3,14 +3,27 @@ import { default as walk } from './walk';
 import { default as chart } from './chart';
 import { default as Edge } from './edge';
 import { default as store } from './store';
+import { SnapshotSemantics, SnapshotPresentation } from './snapshot';
 
-console.log(store.getState());
+//import { changeMode } from './actions';
+
+//console.log(store.getState());
+
+//store.subscribe(() => {
+    //console.log(store.getState());
+//});
+
+//setTimeout(() => {
+    //store.dispatch(changeMode('LATEST_COMMIT_VIEW'));
+//}, 2000);
 
 const render = (conf, data) => {
     let walkable,
         res,
         i,
         l,
+        ssSemantical,
+        ssPresentational,
         transducedRes,
         snapshots = [],
         edges = []; 
@@ -30,7 +43,11 @@ const render = (conf, data) => {
             .map(hunk => Edge.between(hunk, { index: i - 1 }, { index: i })));
     }
 
-    return chart(conf, snapshots, edges);
+    ssSemantical = new SnapshotSemantics(snapshots, store);
+    ssPresentational = new SnapshotPresentation(ssSemantical);
+    ssSemantical.connect(ssPresentational);
+
+    return chart(conf, ssSemantical, edges);
 }
 
 export { render as render };
