@@ -63,7 +63,7 @@ const EdgePresentation = class {
         default:
             this._graphics
                     .transition().duration(1000) 
-                    .style('fill', d => color(d.meta().color).desaturate(0.8));
+                    .style('fill', d => color(d.meta().color).fade(0.9));
             break;
         }
         return this;

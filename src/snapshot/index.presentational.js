@@ -65,7 +65,7 @@ const SnapshotPresentation = class {
                         if (d.hunk.recent) {
                             return d.hunk.meta.color;
                         } else {
-                            return color(d.hunk.meta.color).desaturate(0.8);
+                            return color(d.hunk.meta.color).fade(0.9);
                         }
                     })
                     .style('opacity', 1.0);
