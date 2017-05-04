@@ -36,6 +36,7 @@
     "color": "^1.0.3",
     "d3-scale": "^1.0.5",
     "d3-selection": "^1.0.5",
+    "d3-transition": "^1.0.4",
     "fusioncharts-smartlabel": "^1.0.2",
     "redux": "^3.6.0"
   }
