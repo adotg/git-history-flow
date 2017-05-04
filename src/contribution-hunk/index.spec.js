@@ -1,7 +1,7 @@
 /* global describe it before */
 
 import { expect } from 'chai';
-import { ContributionHunk } from '../contribution-hunk';
+import { default as ContributionHunk } from '../contribution-hunk';
 
 
 describe('ContributionHunk ', function() {

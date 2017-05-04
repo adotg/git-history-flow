@@ -1,4 +1,4 @@
-import { ContributionHunk } from '../contribution-hunk';
+import { default as ContributionHunk } from '../contribution-hunk';
 import { default as utils } from '../utils';
 
 const Snapshot = class {
