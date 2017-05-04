@@ -2,6 +2,7 @@ const ContributionHunk = class {
     constructor  (rangeStart, rangeEnd, meta) {
         this.range = [rangeStart, rangeEnd];
         this.meta = Object.assign({ }, meta);
+        this.recent = true;
 
         this._clones = [];
         this._clonedFrom = null;
@@ -18,6 +19,7 @@ const ContributionHunk = class {
 
         instance._clones.push(newHunk);
         newHunk._clonedFrom = instance;
+        newHunk.recent = false;
     
         return newHunk;
     }
@@ -31,6 +33,7 @@ const ContributionHunk = class {
         instance._clones.push(newHunk);
         newHunk._clonedFrom = instance;
         newHunk.movement = instance.movement;
+        newHunk.recent = false;
         return newHunk;
     }
 

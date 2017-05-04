@@ -5,17 +5,17 @@ import { default as Edge } from './edge';
 import { default as store } from './store';
 import { SnapshotSemantics, SnapshotPresentation } from './snapshot';
 
-//import { changeMode } from './actions';
+import { changeMode } from './actions';
 
-//console.log(store.getState());
+console.log(store.getState());
 
-//store.subscribe(() => {
-    //console.log(store.getState());
-//});
+store.subscribe(() => {
+    console.log(store.getState());
+});
 
-//setTimeout(() => {
-    //store.dispatch(changeMode('LATEST_COMMIT_VIEW'));
-//}, 2000);
+setTimeout(() => {
+    store.dispatch(changeMode('LATEST_COMMIT_VIEW'));
+}, 2000);
 
 const render = (conf, data) => {
     let walkable,
