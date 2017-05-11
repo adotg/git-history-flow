@@ -37,7 +37,8 @@ const TimelinePresentation = class {
 
         this._drawBase(pos.x, pos.y, pos.width);
         this._drawText(pos.y);
-        this._datatimeMark(pos.y, pos.height); 
+        this._datatimeMark(pos.y - 6, pos.height); 
+        this._drawConnectors(pos.y + 6); 
     }
 
     _drawBase (x, y, width) {
@@ -100,9 +101,26 @@ const TimelinePresentation = class {
             .enter()
             .append('rect')
                 .attr('x', d => timeX(utils.getNiceDate(d.data.timestamp)))
-                .attr('y', y - 6)
+                .attr('y', y)
                 .attr('height', height)
                 .attr('width', dayDurationInPx);
+        
+        return this;
+    }
+
+    _drawConnectors (y) {
+        let dep = this._dependencies, 
+            group = this._graphics.connectorGroup = this._graphics.connectorGroup ||
+                (this._group
+                    .append('g')
+                    .attr('class', 'hf-timeline-connector'));
+
+        group
+            .selectAll('path')
+            .data(this._data)
+            .enter()
+            .append('path')
+                .attr('d', (d, i) => ('M' + dep.timeX(d.data.timestamp) + ',' + y + 'L' + dep.x(i) + ',' + dep.y(0)));
         
         return this;
     }
