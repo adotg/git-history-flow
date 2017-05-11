@@ -4,18 +4,19 @@ import { default as chart } from './chart';
 import { default as store } from './store';
 import { Edge, EdgeSemantics, EdgePresentation } from './edge';
 import { SnapshotSemantics, SnapshotPresentation } from './snapshot';
+import { TimelineSemantics, TimelinePresentation } from './timeline';
 
-import { changeMode } from './actions';
+//import { changeMode } from './actions';
 
-console.log(store.getState());
+//console.log(store.getState());
 
-store.subscribe(() => {
-    console.log(store.getState());
-});
+//store.subscribe(() => {
+    //console.log(store.getState());
+//});
 
-setTimeout(() => {
-    store.dispatch(changeMode('LATEST_COMMIT_VIEW'));
-}, 2000);
+//setTimeout(() => {
+    //store.dispatch(changeMode('LATEST_COMMIT_VIEW'));
+//}, 2000);
 
 const render = (conf, data) => {
     let walkable,
@@ -44,7 +45,8 @@ const render = (conf, data) => {
     return chart(
         conf, 
         new SnapshotSemantics(snapshots, store).connect(new SnapshotPresentation()),
-        new EdgeSemantics(edges, store).connect(new EdgePresentation())
+        new EdgeSemantics(edges, store).connect(new EdgePresentation()),
+        new TimelineSemantics(snapshots, store).connect(new TimelinePresentation())
     );
 }
 

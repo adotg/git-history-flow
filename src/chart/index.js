@@ -1,19 +1,13 @@
 const d3 = require('./renderer');
-const SmartLabelManager = require('fusioncharts-smartlabel');
 
 import { default as utils } from '../utils';
 
-function chart (conf, snapshot, edge) {
+function chart (conf, snapshot, edge, timeline) {
     let chartSVG,
         rootG,
         historyFlowG,
         timelineG,
         timelineBaseG,
-        timelineSnapshotG,
-        timelineTextG,
-        axisLinesG,
-        yAxisLinesG,
-        xAxisLinesG,
         snapshotG,
         flowG,
         height,
@@ -22,10 +16,7 @@ function chart (conf, snapshot, edge) {
         y,
         timeX,
         yMax,
-        effectiveHeight,
         padding,
-        dayDurationInPx,
-        smartlabel = new SmartLabelManager(0),
         data = snapshot.getData();
 
     chartSVG = 
@@ -59,26 +50,6 @@ function chart (conf, snapshot, edge) {
         .append('g')
         .attr('class', 'hf-timeline-base');
 
-    timelineSnapshotG = timelineG
-        .append('g')
-        .attr('class', 'hf-timeline-snapshot');
-
-    timelineTextG = timelineG
-        .append('g')
-        .attr('class', 'hf-timeline-text');
-
-    axisLinesG = historyFlowG
-        .append('g')
-            .attr('class', 'hf-axislines-group');
-    
-    yAxisLinesG = axisLinesG
-        .append('g')
-            .attr('class', 'hf-y-axislines-group');
-    
-    xAxisLinesG = axisLinesG
-        .append('g')
-            .attr('class', 'hf-x-axislines-group');
-    
     snapshotG = historyFlowG
         .append('g')
             .attr('class', 'hf-snapshot-group');
@@ -109,78 +80,16 @@ function chart (conf, snapshot, edge) {
     y = d3
         .scaleLinear()
         .domain([0, yMax])
-        .range([0, effectiveHeight = height - 2 * padding.h - 50]); // 50px for the timeline drawing
-
-    yAxisLinesG 
-        .selectAll('path')
-        .data(data)
-        .enter()
-        .append('path')
-            .attr('d', (d, i) => { 
-                let xVal = x(i);
-                return 'M' + xVal + ',0' + 'L' + xVal + ',' + effectiveHeight;
-            });
+        .range([50, height - 2 * padding.h]); // 50px for the timeline drawing
     
-    xAxisLinesG
-        .append('g')
-        .selectAll('path')
-        .data([0])
-        .enter()
-        .append('path')
-            .attr('d', (d) => { 
-                let yVal = y(d);
-                return 'M0,' + yVal + 'L' + (width - 2 * padding.w) + ',' + yVal;
-            });
-
-    timelineBaseG
-        .selectAll('path')
-        .data([1])
-        .enter()
-        .append('path')
-            .attr('d', () => { 
-                let yVal = height - 2 * padding.h;
-                return 'M0,' + yVal + 'L' + (width - 2 * padding.w) + ',' + yVal;
-            });
-    
-    smartlabel.setStyle({
-        'font-size': '10px',
-        'font-family': 'monospace'
-    });
-    timelineTextG
-        .selectAll('text')
-        .data(utils.niceDateTicks(data[0].data.timestamp, data[data.length - 1].data.timestamp))
-        .enter('text')
-        .append('text')
-            .text(d => d)
-            .attr('text-anchor', 'middle')
-            .attr('x', (d, i) => {
-                let dim = smartlabel.getOriSize(d);
-                if (i) {
-                    return x(data.length - 1) - dim.width * 1 / 4; 
-                } else {
-                    return x(0) + dim.width * 1 / 4;
-                }
-            })
-            .attr('y', () => {
-                let yVal = height - 2 * padding.h;
-                return yVal + smartlabel.getOriSize('W').height * 1.5;
-            })
-            .style('font-family', 'monospace')
-            .style('font-size', '10px');
-
-    snapshot.render(snapshotG, {x: x, y: y});
-    edge.render(flowG, {x: x, y: y});
-    
-    dayDurationInPx = timeX(new Date(1970, 0, 2)) - timeX(new Date(1970, 0, 1));
-    timelineSnapshotG
-        .selectAll('circle')
-        .data(data)
-        .enter()
-        .append('rect')
-            .attr('x', d => timeX(utils.getNiceDate(d.data.timestamp)))
-            .attr('y', () => height - 2 * padding.h - 6)
-            .attr('height', 12)
-            .attr('width', dayDurationInPx);
+    timeline.render(timelineBaseG, { 
+        x: 0, 
+        y: 0,
+        width: width - 2 * padding.w,
+        height: 12 
+    }, { x: x, timeX: timeX, y: y });
+    snapshot.render(snapshotG, { x: x, y: y });
+    edge.render(flowG, { x: x, y: y });
 }
 
 export { chart as default };
