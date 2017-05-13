@@ -39,7 +39,11 @@ const render = (conf, data) => {
     for ( i = 1, l = snapshots.length; i < l; i++) {
         edges.push(snapshots[i].hunks
             .filter(hunk => !!hunk._clonedFrom)
-            .map(hunk => Edge.between(hunk, { index: i - 1 }, { index: i })));
+            .map(hunk => Edge.between(
+                hunk, 
+                { index: i - 1, snapshot: snapshots[i -1] }, 
+                { index: i, snapshot: snapshots[i] }
+            )));
     }
 
     return chart(

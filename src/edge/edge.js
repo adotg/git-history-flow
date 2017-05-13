@@ -11,15 +11,26 @@ const Edge = class {
         return new Edge(right, leftBoundary, rightBoundary);
     }
 
-    boundary () {
-        let bottom = this.rightNode.range[0],
+    boundary (equiDistant) {
+        let lx,
+            rx,
+            bottom = this.rightNode.range[0],
             top = this.rightNode.range[1];
 
+        if (equiDistant) {
+            lx = this.leftBoundary.index;
+            rx = this.rightBoundary.index;
+        } else {
+            lx = this.leftBoundary.snapshot.data.timestamp;
+            rx = this.rightBoundary.snapshot.data.timestamp;
+        }
+
+
         return [
-            [ this.leftBoundary.index, top - this.attr ],
-            [ this.leftBoundary.index, bottom - this.attr ],
-            [ this.rightBoundary.index, bottom ],
-            [ this.rightBoundary.index, top ]
+            [ lx, top - this.attr ],
+            [ lx, bottom - this.attr ],
+            [ rx, bottom ],
+            [ rx, top ]
         ];
     }
 

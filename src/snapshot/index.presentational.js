@@ -2,6 +2,7 @@ import { default as color } from 'color';
 
 const SnapshotPresentation = class {
     constructor  () {
+        this._model = null;
         this._graphics = null;
         this._group = null;
         this._dependencies = null;
@@ -21,34 +22,52 @@ const SnapshotPresentation = class {
     }
 
     _draw (state) {
-        let depencencies = this._dependencies, 
-            x = depencencies.x,
-            y = depencencies.y;
-
-        this._graphics = this._group 
+        this._model = this._group 
             .selectAll('.hf-atomic-snapshot-g')
-            .data(this._data)
-            .enter()
-            .append('g')
-                .attr('class', 'hf-atomic-snapshot-g')
-                .selectAll('rect')
-                .data((d, i) => 
-                    d.hunks.map(hunk => 
-                        ({ hunk: hunk, groupIndex: i })))
-                .enter()
-                .append('rect')
-                    .attr('x', d => d._plotXStartPos = x(d.groupIndex - .05)) 
-                    .attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1)) 
-                    .attr('width', d => x(d.groupIndex + .05) - d._plotXStartPos) 
-                    .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
-                    .style('opacity', 0.0);
+            .data(this._data);
         
         this.action(state);
 
         return this;
     }
 
+    _modelToGraphics (x, xValFn) {
+        let rootGraphics, 
+            y = this._dependencies.y;
+
+        rootGraphics = this._model
+            .enter()
+            .append('g')
+                .attr('class', 'hf-atomic-snapshot-g')
+                .selectAll('rect')
+                .data((d, i) => 
+                    d.hunks.map(hunk => 
+                        ({ hunk: hunk, groupIndex: i, parentData: d })))
+                .enter()
+                .append('rect')
+                    .attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1)) 
+                    .attr('width', 0.5) 
+                    .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
+                    .style('opacity', 0.0)
+                .merge(this._model)
+                    .attr('x', d => d._plotXStartPos = x(xValFn(d, d.parentData)));
+
+
+        return rootGraphics;
+    }
+
     action (state) {
+        switch(state.xType) {
+        case 'ORDINAL_X':
+            this._graphics = this._modelToGraphics(this._dependencies.x, datum => datum.groupIndex);
+            break;
+
+        case 'TIME_X':
+        default:
+            this._graphics = this._modelToGraphics(this._dependencies.timeX, (datum, d) => d.data.timestamp);
+            break;
+        }
+
         switch(state.mode) {
         case 'COMMUNITY_VIEW':
             this._graphics
