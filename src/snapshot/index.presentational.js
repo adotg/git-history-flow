@@ -22,38 +22,46 @@ const SnapshotPresentation = class {
     }
 
     _draw (state) {
-        this._model = this._group 
-            .selectAll('.hf-atomic-snapshot-g')
-            .data(this._data);
-        
         this.actions().map(action => action.executable(state[action.path]));
-
         return this;
     }
 
     _modelToGraphics (x, xValFn) {
         let rootGraphics, 
+            nestedGraphics,
+            graphics,
             y = this._dependencies.y;
 
-        rootGraphics = this._model
+        rootGraphics = this._group 
+            .selectAll('.hf-atomic-snapshot-g')
+            .data(this._data);
+
+
+        nestedGraphics = rootGraphics
             .enter()
             .append('g')
                 .attr('class', 'hf-atomic-snapshot-g')
+            .merge(rootGraphics)
                 .selectAll('rect')
                 .data((d, i) => 
                     d.hunks.map(hunk => 
-                        ({ hunk: hunk, groupIndex: i, parentData: d })))
+                        ({ hunk: hunk, groupIndex: i, parentData: d })));
+
+        graphics = nestedGraphics 
                 .enter()
                 .append('rect')
                     .attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1)) 
                     .attr('width', 0.5) 
                     .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
                     .style('opacity', 0.0)
-                .merge(this._model)
-                    .attr('x', d => d._plotXStartPos = x(xValFn(d, d.parentData)));
+                .merge(nestedGraphics);
+
+        graphics
+            .transition(this._dependencies.transition)
+            .attr('x', d => d._plotXStartPos = x(xValFn(d, d.parentData)));
 
 
-        return rootGraphics;
+        return graphics;
     }
 
     actions () {
@@ -87,7 +95,7 @@ const SnapshotPresentation = class {
                     switch(newVal) {
                     case 'COMMUNITY_VIEW':
                         this._graphics
-                                .transition().duration(1000)
+                                .transition(this._dependencies.transition)
                                 .style('fill', d => d.hunk.meta.color)
                                 .style('opacity', 1.0);
                         break;
@@ -95,7 +103,7 @@ const SnapshotPresentation = class {
                     case 'LATEST_COMMIT_VIEW':
                     default:
                         this._graphics
-                                .transition().duration(1000)
+                                .transition(this._dependencies.transition)
                                 .style('fill', d => {
                                     if (d.hunk.recent) {
                                         return d.hunk.meta.color;
