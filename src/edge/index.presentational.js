@@ -26,7 +26,7 @@ const EdgePresentation = class {
             .selectAll('.hf-atomic-flow-g')
             .data(this._data);
 
-        this.action(state);
+        this.actions().map(action => action.executable(state[action.path]));
         return this;
 
     }
@@ -59,33 +59,51 @@ const EdgePresentation = class {
         return rootGraphics;
     }
 
-    action (state) {
-        switch(state.xType) {
-        case 'ORDINAL_X':
-            this._graphics = this._modelToGraphics(this._dependencies.x, d => d.boundary(true));
-            break;
+    actions () {
+        return [
+            {
+                path: 'xType',
+                executable: (newVal, oldVal) => {
+                    if (newVal === oldVal) {
+                        return;
+                    }
 
-        case 'TIME_X':
-        default:
-            this._graphics = this._modelToGraphics(this._dependencies.timeX, d => d.boundary());
-            break;
-        }
+                    switch(newVal) {
+                    case 'ORDINAL_X':
+                        this._graphics = this._modelToGraphics(this._dependencies.x, d => d.boundary(true));
+                        break;
 
-        switch(state.mode) {
-        case 'COMMUNITY_VIEW':
-            this._graphics
-                    .transition().duration(1000) 
-                    .style('fill', d => d.meta().color);
-            break;
+                    case 'TIME_X':
+                    default:
+                        this._graphics = this._modelToGraphics(this._dependencies.timeX, d => d.boundary());
+                        break;
+                    }
+                }
+            },
+            {
+                path: 'mode',
+                executable: (newVal, oldVal) => {
+                    if (newVal === oldVal) {
+                        return;
+                    }
 
-        case 'LATEST_COMMIT_VIEW':
-        default:
-            this._graphics
-                    .transition().duration(1000) 
-                    .style('fill', d => color(d.meta().color).fade(0.9));
-            break;
-        }
-        return this;
+                    switch(newVal) {
+                    case 'COMMUNITY_VIEW':
+                        this._graphics
+                                .transition().duration(1000)
+                                .style('fill', d => d.meta().color);
+                        break;
+
+                    case 'LATEST_COMMIT_VIEW':
+                    default:
+                        this._graphics
+                            .transition().duration(1000)
+                            .style('fill', d => color(d.meta().color).fade(0.9));
+                        break;
+                    }
+                }
+            }
+        ];
     }
 };
 

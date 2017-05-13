@@ -26,7 +26,7 @@ const SnapshotPresentation = class {
             .selectAll('.hf-atomic-snapshot-g')
             .data(this._data);
         
-        this.action(state);
+        this.actions().map(action => action.executable(state[action.path]));
 
         return this;
     }
@@ -56,41 +56,59 @@ const SnapshotPresentation = class {
         return rootGraphics;
     }
 
-    action (state) {
-        switch(state.xType) {
-        case 'ORDINAL_X':
-            this._graphics = this._modelToGraphics(this._dependencies.x, datum => datum.groupIndex);
-            break;
+    actions () {
+        return [
+            {
+                path: 'xType',
+                executable: (newVal, oldVal) => {
+                    if (newVal === oldVal) {
+                        return;
+                    }
 
-        case 'TIME_X':
-        default:
-            this._graphics = this._modelToGraphics(this._dependencies.timeX, (datum, d) => d.data.timestamp);
-            break;
-        }
+                    switch(newVal) {
+                    case 'ORDINAL_X':
+                        this._graphics = this._modelToGraphics(this._dependencies.x, datum => datum.groupIndex);
+                        break;
 
-        switch(state.mode) {
-        case 'COMMUNITY_VIEW':
-            this._graphics
-                    .transition().duration(1000) 
-                    .style('fill', d => d.hunk.meta.color)
-                    .style('opacity', 1.0);
-            break;
+                    case 'TIME_X':
+                    default:
+                        this._graphics = this._modelToGraphics(this._dependencies.timeX, (datum, d) => d.data.timestamp);
+                        break;
+                    }
+                }
+            },
+            {
+                path: 'mode',
+                executable: (newVal, oldVal) => {
+                    if (newVal === oldVal) {
+                        return;
+                    }
 
-        case 'LATEST_COMMIT_VIEW':
-        default:
-            this._graphics
-                    .transition().duration(1000) 
-                    .style('fill', d => {
-                        if (d.hunk.recent) {
-                            return d.hunk.meta.color;
-                        } else {
-                            return color(d.hunk.meta.color).fade(0.9);
-                        }
-                    })
-                    .style('opacity', 1.0);
-            break;
-        }
-        return this;
+                    switch(newVal) {
+                    case 'COMMUNITY_VIEW':
+                        this._graphics
+                                .transition().duration(1000)
+                                .style('fill', d => d.hunk.meta.color)
+                                .style('opacity', 1.0);
+                        break;
+
+                    case 'LATEST_COMMIT_VIEW':
+                    default:
+                        this._graphics
+                                .transition().duration(1000)
+                                .style('fill', d => {
+                                    if (d.hunk.recent) {
+                                        return d.hunk.meta.color;
+                                    } else {
+                                        return color(d.hunk.meta.color).fade(0.9);
+                                    }
+                                })
+                                .style('opacity', 1.0);
+                        break;
+                    }
+                }
+            }
+        ];
     }
 };
 

@@ -1,18 +1,22 @@
+import watch from 'redux-watch';
+
 const EdgeSemantics = class {
     constructor  (data, store) {
         this.data = data;
         this.store = store;
 
         this.presentation = null;
-
-        this.unsubscribe = store.subscribe(() => {
-            this.presentation.action(store.getState());
-        });
+        this.unsubscribe = [];
     }
 
     connect (presentation) {
         this.presentation = presentation;
         this.presentation.setData(this.getData());
+
+        this.unsubscribe = this.presentation.actions().map(action => {
+            let watcher = watch(this.store.getState, action.path);
+            return this.store.subscribe(watcher(action.executable));
+        });
 
         return this;
     }
