@@ -13,6 +13,7 @@ function chart (conf, snapshot, edge) {
         timeX,
         yMax,
         padding,
+        transition,
         data = snapshot.getData();
 
     chartSVG = 
@@ -69,9 +70,13 @@ function chart (conf, snapshot, edge) {
         .scaleLinear()
         .domain([0, yMax])
         .range([50, height - 2 * padding.h]); // 50px for the timeline drawing
+
+
+    transition = d3.transition()
+        .duration(750);
     
-    snapshot.render(snapshotG, { x: x, timeX: timeX, y: y });
-    edge.render(flowG, { x: x, timeX: timeX, y: y });
+    snapshot.render(snapshotG, { x: x, timeX: timeX, y: y, transition: transition });
+    edge.render(flowG, { x: x, timeX: timeX, y: y, transition: transition });
 }
 
 export { chart as default };
