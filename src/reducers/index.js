@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import { default as mode } from './mode';
+import { mode, xType } from './common';
 
 const model = combineReducers({
-    mode
+    mode,
+    xType
 });
 
 export { model as default };
