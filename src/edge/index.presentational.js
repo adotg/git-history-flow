@@ -62,13 +62,11 @@ const EdgePresentation = class {
     action (state) {
         switch(state.xType) {
         case 'ORDINAL_X':
-            console.log('ordinal');
             this._graphics = this._modelToGraphics(this._dependencies.x, d => d.boundary(true));
             break;
 
         case 'TIME_X':
         default:
-            console.log('time');
             this._graphics = this._modelToGraphics(this._dependencies.timeX, d => d.boundary());
             break;
         }
