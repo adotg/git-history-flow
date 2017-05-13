@@ -1,13 +1,9 @@
 const d3 = require('./renderer');
 
-import { default as utils } from '../utils';
-
-function chart (conf, snapshot, edge, timeline) {
+function chart (conf, snapshot, edge) {
     let chartSVG,
         rootG,
         historyFlowG,
-        timelineG,
-        timelineBaseG,
         snapshotG,
         flowG,
         height,
@@ -42,14 +38,6 @@ function chart (conf, snapshot, edge, timeline) {
         .append('g')
             .attr('class', 'hf-chart-group');
     
-    timelineG = rootG 
-        .append('g')
-            .attr('class', 'hf-timeline-group');
-    
-    timelineBaseG = timelineG
-        .append('g')
-        .attr('class', 'hf-timeline-base');
-
     snapshotG = historyFlowG
         .append('g')
             .attr('class', 'hf-snapshot-group');

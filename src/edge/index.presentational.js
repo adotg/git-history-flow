@@ -54,7 +54,7 @@ const EdgePresentation = class {
                             'L' + x(boundary[2][0]) + ',' + y(boundary[2][1] - 1) +  
                             'L' + x(boundary[3][0]) + ',' + y(boundary[3][1]) + 
                             'Z';
-                    }) 
+                    });
 
         return rootGraphics;
     }
