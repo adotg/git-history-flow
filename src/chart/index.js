@@ -14,6 +14,7 @@ function chart (conf, snapshot, edge) {
         yMax,
         padding,
         transition,
+        params,
         data = snapshot.getData();
 
     chartSVG = 
@@ -39,14 +40,13 @@ function chart (conf, snapshot, edge) {
         .append('g')
             .attr('class', 'hf-chart-group');
     
-    flowG = historyFlowG
-        .append('g')
-            .attr('class', 'hf-flow-group');
-
-
     snapshotG = historyFlowG
         .append('g')
             .attr('class', 'hf-snapshot-group');
+
+    flowG = historyFlowG
+        .append('g')
+            .attr('class', 'hf-flow-group');
 
     x = d3
         .scaleLinear()
@@ -70,14 +70,22 @@ function chart (conf, snapshot, edge) {
     y = d3
         .scaleLinear()
         .domain([0, yMax])
-        .range([50, height - 2 * padding.h]); // 50px for the timeline drawing
+        .range([0, height - 2 * padding.h]); // 50px for the timeline drawing
 
 
     transition = d3.transition()
         .duration(750);
+
+    params = {
+        x: x,
+        timeX: timeX,
+        y: y,
+        transition: transition,
+        yMax: yMax
+    };
     
-    snapshot.render(snapshotG, { x: x, timeX: timeX, y: y, transition: transition });
-    edge.render(flowG, { x: x, timeX: timeX, y: y, transition: transition });
+    snapshot.render(snapshotG, params);
+    edge.render(flowG, params);
 }
 
 export { chart as default };
