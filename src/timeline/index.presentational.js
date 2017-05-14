@@ -34,21 +34,7 @@ const TimelinePresentation = class {
 
     _draw () {
         let pos = this._pos;
-
-        this._drawBase(pos.x, pos.y, pos.width);
         this._drawText(pos.y);
-        this._datatimeMark(pos.y - 6, pos.height); 
-        this._drawConnectors(pos.y + 6); 
-    }
-
-    _drawBase (x, y, width) {
-        this._group 
-            .selectAll('path')
-            .data([1])
-            .enter()
-            .append('path')
-                .attr('d', () => 
-                    ('M' + x.toString() + ',' + y.toString() + 'L' + (width - x).toString() + ',' + y.toString())); 
 
         return this;
     }
@@ -83,57 +69,6 @@ const TimelinePresentation = class {
                 .style('font-family', 'monospace')
                 .style('font-size', '10px');
 
-        return this;
-    }
-
-    _datatimeMark (y, height) {
-        let dayDurationInPx,
-            timeX = this._dependencies.timeX, 
-            group = this._graphics.snapshotGroup = this._graphics.snapshotGroup ||
-                (this._group
-                    .append('g')
-                    .attr('class', 'hf-timeline-snapshot'));
-
-        dayDurationInPx = timeX(new Date(1970, 0, 2)) - timeX(new Date(1970, 0, 1));
-        group 
-            .selectAll('circle')
-            .data(this._data)
-            .enter()
-            .append('rect')
-                .attr('x', d => timeX(utils.getNiceDate(d.data.timestamp)))
-                .attr('y', y)
-                .attr('height', height)
-                .attr('width', dayDurationInPx);
-        
-        return this;
-    }
-
-    _drawConnectors (y) {
-        let dep = this._dependencies, 
-            group = this._graphics.connectorGroup = this._graphics.connectorGroup ||
-                (this._group
-                    .append('g')
-                    .attr('class', 'hf-timeline-connector'));
-
-        group
-            .selectAll('path')
-            .data(this._data)
-            .enter()
-            .append('path')
-                .attr('d', (d, i) => ('M' + dep.timeX(d.data.timestamp) + ',' + y + 'L' + dep.x(i) + ',' + dep.y(0)));
-        
-        return this;
-    }
-
-    action (state) {
-        switch(state.mode) {
-        case 'COMMUNITY_VIEW':
-            break;
-
-        case 'LATEST_COMMIT_VIEW':
-        default:
-            break;
-        }
         return this;
     }
 };

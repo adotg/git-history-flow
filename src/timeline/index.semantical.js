@@ -4,10 +4,6 @@ const TimelineSemantics = class {
         this.store = store;
 
         this.presentation = null;
-
-        this.unsubscribe = store.subscribe(() => {
-            this.presentation.action(store.getState());
-        });
     }
 
     connect (presentation) {
