@@ -34,6 +34,9 @@
                 } else {
                     api.store.dispatch(api.all.changeXType('ORDINAL_X'));
                 }
+                // @hack
+                modeR[0].checked = true;
+                api.store.dispatch(api.all.changeMode('COMMUNITY_VIEW'));
             });
         });
 
@@ -80,6 +83,15 @@
             fill: #8b8b8b;
             stroke: #8b8b8b;
             stroke-width: 0.5px;
+        }
+
+        .hf-axisline-g {
+            stroke-width: 0;
+            fill: #d4d4d4;
+        }
+
+        .hf-ilayer {
+            opacity: 0;
         }
 
     <style>
