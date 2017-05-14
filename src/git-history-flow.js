@@ -39,7 +39,8 @@ const render = (conf, data) => {
         conf, 
         new SnapshotSemantics(snapshots, store).connect(new SnapshotPresentation()),
         new EdgeSemantics(edges, store).connect(new EdgePresentation()),
-        new TimelineSemantics(snapshots, store).connect(new TimelinePresentation())
+        new TimelineSemantics(snapshots, store).connect(new TimelinePresentation()),
+        { store: store }
     );
 
     return {

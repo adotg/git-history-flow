@@ -3,9 +3,10 @@ import { default as utils } from '../utils';
 
 const d3 = require('./renderer');
 
-function chart (conf, snapshot, edge, dependencies) {
+function chart (conf, snapshot, edge, timeline, dependencies) {
     let chartSVG,
         rootG,
+        timelineG,
         historyFlowG,
         snapshotG,
         flowG,
@@ -41,6 +42,10 @@ function chart (conf, snapshot, edge, dependencies) {
         .append('g')
             .attr('class', 'hf-root-group')
             .attr('transform', 'translate(' + padding.w + ', ' + padding.h + ')');
+
+    timelineG = rootG
+        .append('g')
+        .attr('class', 'hf-timeline-group');
 
     historyFlowG = rootG 
         .append('g')
@@ -98,6 +103,9 @@ function chart (conf, snapshot, edge, dependencies) {
         yMax: yMax
     };
     
+    timeline.render(timelineG, {
+        y: height - padding.h
+    }, params);
     snapshot.render(snapshotG, params);
     edge.render(flowG, params);
 
