@@ -25,6 +25,28 @@ utils.ISO8601toNativeDate = (isoString) => {
         timeCompArr[0], timeCompArr[1], timeCompArr[2]);
 };
 
+utils.search = (arr, item, start, end) => {
+    let middle;
+
+    start = start || 0;
+    end = end || arr.length - 1;
+
+    if (end - start === 1) {
+        return ((arr[end] + arr[start]) / 2) > item ? start : end;
+    }
+
+    middle = (start + end) / 2;
+    middle = Math.floor(middle);
+
+    if (arr[middle] === item) {
+        return middle;
+    } else if (arr[middle] < item) {
+        return utils.search(arr, item, middle, end);
+    } else {
+        return utils.search(arr, item, start, middle);
+    }
+};
+
 utils.getNiceDate = (date, towards = 0) => {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate() + towards);
 };
