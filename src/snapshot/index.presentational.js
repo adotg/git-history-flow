@@ -60,7 +60,6 @@ const SnapshotPresentation = class {
             .transition(this._dependencies.transition)
             .attr('x', d => d._plotXStartPos = x(xValFn(d, d.parentData)));
 
-
         return graphics;
     }
 
@@ -97,13 +96,20 @@ const SnapshotPresentation = class {
                         this._graphics
                                 .transition(this._dependencies.transition)
                                 .style('fill', d => d.hunk.meta.color)
-                                .style('opacity', 1.0);
+                                .style('opacity', 0.0);
                         break;
 
                     case 'LATEST_COMMIT_VIEW':
                     default:
                         this._graphics
                                 .transition(this._dependencies.transition)
+                                .attr('width', d => {
+                                    if (d.hunk.recent) {
+                                        return 2;
+                                    } else {
+                                        return 0.5;
+                                    }
+                                })
                                 .style('fill', d => {
                                     if (d.hunk.recent) {
                                         return d.hunk.meta.color;
