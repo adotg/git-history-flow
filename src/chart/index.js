@@ -1,6 +1,9 @@
+import { focus } from '../actions';
+import { default as utils } from '../utils';
+
 const d3 = require('./renderer');
 
-function chart (conf, snapshot, edge) {
+function chart (conf, snapshot, edge, dependencies) {
     let chartSVG,
         rootG,
         historyFlowG,
@@ -15,6 +18,9 @@ function chart (conf, snapshot, edge) {
         padding,
         transition,
         params,
+        allMS,
+        iLayer,
+        store = dependencies.store,
         data = snapshot.getData();
 
     chartSVG = 
@@ -47,6 +53,14 @@ function chart (conf, snapshot, edge) {
     flowG = historyFlowG
         .append('g')
             .attr('class', 'hf-flow-group');
+
+    iLayer = rootG
+        .append('rect')
+        .attr('class', 'hf-ilayer')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', width - 2 * padding.w)
+        .attr('height', height - 2 * padding.h);
 
     x = d3
         .scaleLinear()
@@ -86,6 +100,27 @@ function chart (conf, snapshot, edge) {
     
     snapshot.render(snapshotG, params);
     edge.render(flowG, params);
+
+    allMS = snapshot.data.map(s => s.data.timestamp.getTime()); 
+    iLayer
+        .on('mousemove', function () {
+            let index, 
+                state = store.getState();
+
+            if (state.xType === 'ORDINAL_X') {
+                index = Math.round(x.invert(d3.mouse(this)[0]));
+            } else if (state.xType === 'TIME_X') {
+                index = utils.search(allMS, Math.round(timeX.invert(d3.mouse(this)[0])));
+            } else {
+                index = null;
+            }
+
+            store.dispatch(focus(index)); 
+        })
+        .on('mouseout', function () {
+            store.dispatch(focus(null));
+        });
+
 }
 
 export { chart as default };

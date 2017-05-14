@@ -75,10 +75,10 @@ const SnapshotPresentation = class {
                 .enter()
                 .append('rect')
                     .attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1)) 
-                    .attr('width', 0.5) 
                     .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
                     .style('opacity', 0.0)
-                .merge(nestedGraphics));
+                .merge(nestedGraphics)
+                    .attr('width', d => d.__width = d.__width || 0.5));
 
         graphics.map(graph => graph
             .transition(this._dependencies.transition)
@@ -123,7 +123,7 @@ const SnapshotPresentation = class {
 
                         this._graphics[1]
                                 .transition(this._dependencies.transition)
-                                .attr('width', 0.5)
+                                .attr('width', d => d.__width = 0.5)
                                 .style('fill', d => d.hunk.meta.color)
                                 .style('opacity', 1.0);
                         break;
@@ -138,9 +138,9 @@ const SnapshotPresentation = class {
                                 .transition(this._dependencies.transition)
                                 .attr('width', d => {
                                     if (d.hunk.recent) {
-                                        return 2;
+                                        return d.__width = 2;
                                     } else {
-                                        return 0.5;
+                                        return d.__width = 0.5;
                                     }
                                 })
                                 .style('fill', d => {
@@ -153,6 +153,27 @@ const SnapshotPresentation = class {
                                 .style('opacity', 1.0);
                         break;
                     }
+                }
+            },
+            {
+                path: 'focus',
+                executable: (newVal, oldVal) => {
+                    if (newVal === oldVal) {
+                        return;
+                    }
+
+                    if (newVal === null || !isFinite(newVal)) {
+                        this._graphics[1]
+                            .attr('width', d => d.__width);
+
+                        return;
+                    }
+
+                    this._graphics[1]
+                        .attr('width', d => d.__width);
+
+                    this._graphics[1]
+                        .attr('width', d => (d.groupIndex === newVal ? 5 : d.__width));
                 }
             }
         ];
