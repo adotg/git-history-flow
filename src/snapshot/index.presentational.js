@@ -29,13 +29,37 @@ const SnapshotPresentation = class {
     _modelToGraphics (x, xValFn) {
         let rootGraphics, 
             nestedGraphics,
-            graphics,
+            axislineGraphics,
+            nestedAxisLineGraphics,
+            graphics = [],
             y = this._dependencies.y;
 
         rootGraphics = this._group 
             .selectAll('.hf-atomic-snapshot-g')
             .data(this._data);
 
+        axislineGraphics = this._group 
+            .selectAll('.hf-axisline-g')
+            .data([this._data]);
+            
+        nestedAxisLineGraphics = axislineGraphics
+            .enter()
+            .append('g')
+                .attr('class', 'hf-axisline-g')
+            .merge(axislineGraphics)
+                .selectAll('rect')
+                .data(d => 
+                    d.map((datum, i) => 
+                        ({ groupIndex: i, parentData: datum })));
+
+        graphics.push(nestedAxisLineGraphics
+                .enter()
+                .append('rect')
+                    .attr('y', 0) 
+                    .attr('height', y(this._dependencies.yMax)) 
+                    .attr('width', 0.5) 
+                    .style('opacity', 0.0)
+                .merge(nestedAxisLineGraphics));
 
         nestedGraphics = rootGraphics
             .enter()
@@ -47,18 +71,18 @@ const SnapshotPresentation = class {
                     d.hunks.map(hunk => 
                         ({ hunk: hunk, groupIndex: i, parentData: d })));
 
-        graphics = nestedGraphics 
+        graphics.push(nestedGraphics 
                 .enter()
                 .append('rect')
                     .attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1)) 
                     .attr('width', 0.5) 
                     .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
                     .style('opacity', 0.0)
-                .merge(nestedGraphics);
+                .merge(nestedGraphics));
 
-        graphics
+        graphics.map(graph => graph
             .transition(this._dependencies.transition)
-            .attr('x', d => d._plotXStartPos = x(xValFn(d, d.parentData)));
+            .attr('x', d => d._plotXStartPos = x(xValFn(d, d.parentData))));
 
         return graphics;
     }
@@ -93,15 +117,24 @@ const SnapshotPresentation = class {
 
                     switch(newVal) {
                     case 'COMMUNITY_VIEW':
-                        this._graphics
+                        this._graphics[0]
                                 .transition(this._dependencies.transition)
+                                .style('opacity', 1.0);
+
+                        this._graphics[1]
+                                .transition(this._dependencies.transition)
+                                .attr('width', 0.5)
                                 .style('fill', d => d.hunk.meta.color)
-                                .style('opacity', 0.0);
+                                .style('opacity', 1.0);
                         break;
 
                     case 'LATEST_COMMIT_VIEW':
                     default:
-                        this._graphics
+                        this._graphics[0]
+                                .transition(this._dependencies.transition)
+                                .style('opacity', 0.5);
+
+                        this._graphics[1]
                                 .transition(this._dependencies.transition)
                                 .attr('width', d => {
                                     if (d.hunk.recent) {
