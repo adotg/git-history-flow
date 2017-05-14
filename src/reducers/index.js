@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import { mode, xType } from './common';
+import { mode, xType, focus } from './common';
 
 const model = combineReducers({
     mode,
-    xType
+    xType,
+    focus
 });
 
 export { model as default };

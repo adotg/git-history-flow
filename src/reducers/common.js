@@ -23,6 +23,15 @@ const MODES_ENUM = {
         default:
             return state;
         }
+    },
+    focus = (state = null, action) => {
+        switch (action.type) {
+        case 'FOCUS':
+            return action.payload.index;
+
+        default:
+            return state;
+        }
     };
 
-export { mode, xType };
+export { mode, xType, focus };
