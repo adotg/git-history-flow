@@ -39,13 +39,14 @@ function chart (conf, snapshot, edge) {
         .append('g')
             .attr('class', 'hf-chart-group');
     
-    snapshotG = historyFlowG
-        .append('g')
-            .attr('class', 'hf-snapshot-group');
-    
     flowG = historyFlowG
         .append('g')
             .attr('class', 'hf-flow-group');
+
+
+    snapshotG = historyFlowG
+        .append('g')
+            .attr('class', 'hf-snapshot-group');
 
     x = d3
         .scaleLinear()
