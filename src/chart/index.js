@@ -23,6 +23,9 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         iLayer,
         store = dependencies.store,
         data = snapshot.getData();
+    
+    conf.width = conf.mountPoint.clientWidth;
+    conf.height = conf.mountPoint.clientHeight;
 
     chartSVG = 
         d3.select(conf.mountPoint)
@@ -41,7 +44,7 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
     rootG = chartSVG
         .append('g')
             .attr('class', 'hf-root-group')
-            .attr('transform', 'translate(' + padding.w + ', ' + padding.h + ')');
+            .attr('transform', 'translate(' + padding.w + ', ' + 0 + ')');
 
     timelineG = rootG
         .append('g')
