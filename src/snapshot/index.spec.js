@@ -15,7 +15,7 @@ describe('Snapshot', function() {
         
         before(function () {
             firstSnapshot = Snapshot
-                            .with()
+                            .with(Snapshot.root(), { timestamp: '2011-08-18 10:10:16 -0700', user: { email: 'any@any.com' }})
                             .transact([[0, 0, 1, 7]]);
         });
         
@@ -35,7 +35,7 @@ describe('Snapshot', function() {
         
         before(function () {
             secondSnapshot = Snapshot
-                                .with(firstSnapshot)
+                                .with(firstSnapshot, { timestamp: '2012-08-18 10:10:16 -0700', user: { email: 'any2@any.com'}})
                                 .transact([[0, 0, 8, 3]]);
         });
 
@@ -59,7 +59,7 @@ describe('Snapshot', function() {
         
         before(function () {
             thirdSnapshot = Snapshot
-                                .with(secondSnapshot)
+                                .with(secondSnapshot, { timestamp: '2013-08-18 10:10:16 -0700', user: { email: 'any3@any.com'}})
                                 .transact([[0, 0, 8, 2]]);
         });
 
@@ -91,7 +91,7 @@ describe('Snapshot', function() {
         
         before(function () {
             fourthSnapshot = Snapshot
-                                .with(thirdSnapshot)
+                                .with(thirdSnapshot, { timestamp: '2014-08-18 10:10:16 -0700', user: { email: 'any4@any.com'} })
                                 .transact([[0, 0, 5, 1]]);
         });
 
@@ -125,7 +125,7 @@ describe('Snapshot', function() {
         
         before(function () {
             fifthSnapshot = Snapshot
-                                .with(thirdSnapshot)
+                                .with(thirdSnapshot, { timestamp: '2015-08-18 10:10:16 -0700', user: { email: 'any5@any.com'} })
                                 .transact([[0, 0, 7, 1]]);
         });
         
@@ -155,7 +155,7 @@ describe('Snapshot', function() {
 
         before(function () {
             sixthSnapshot = Snapshot
-                                .with(fifthSnapshot)
+                                .with(fifthSnapshot, { timestamp: '2016-08-18 10:10:16 -0700', user: { email: 'any6@any.com'} })
                                 .transact([[3, 2, 1, 0]]);
         });
 

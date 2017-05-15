@@ -63,7 +63,7 @@ describe('ContributionHunk ', function() {
         });
         
         it('saves the source reference to the cloned object', function() {
-            expect(clone._clonedFrom).to.equal(hunk);
+            expect(clone._clonedFrom).to.equal(true);
         });
     });
     
