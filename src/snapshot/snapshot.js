@@ -60,6 +60,11 @@ const Snapshot = class {
             delta += (-deleted + added);
         });
 
+        this.hunks = ContributionHunk.merge(this.hunks);
+        this.tracker = this.hunks.reduce((acc, hunk, i) => {
+            return acc.concat(Array(hunk.range[1] - hunk.range[0] + 1).fill(i));
+        }, [null]);
+
         return this;
     }
 

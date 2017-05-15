@@ -18,7 +18,7 @@ const ContributionHunk = class {
         let newHunk = new ContributionHunk(instance.range[0], instance.range[1], instance.meta);
 
         instance._clones.push(newHunk);
-        newHunk._clonedFrom = instance;
+        newHunk._clonedFrom = true;
         newHunk.recent = false;
     
         return newHunk;
@@ -31,10 +31,34 @@ const ContributionHunk = class {
             instance.meta);
 
         instance._clones.push(newHunk);
-        newHunk._clonedFrom = instance;
+        newHunk._clonedFrom = true;
         newHunk.movement = instance.movement;
         newHunk.recent = false;
         return newHunk;
+    }
+
+    static merge(hunks) {
+        let newItem;
+
+        return hunks.reduce((acc, item, i, hunks) => {
+            if (!i) {
+                newItem = this.cloneWithRange(item, item.range[0], item.range[1]);
+                newItem._clonedFrom = item._clonedFrom;
+                newItem.recent = item.recent;
+                return (acc.push(newItem), acc);
+            }
+
+            if(item.meta.user.email === hunks[i - 1].meta.user.email && item.movement === hunks[i - 1].movement &&
+                item._clonedFrom === hunks[i - 1]._clonedFrom && !item.recent) {
+                acc[acc.length - 1].updateRange(undefined, item.range[1]);
+            } else {
+                newItem = this.cloneWithRange(item, item.range[0], item.range[1]);
+                newItem._clonedFrom = item._clonedFrom;
+                newItem.recent = item.recent;
+                acc.push(newItem);
+            }
+            return acc;
+        }, []);
     }
 
     updateRange (rangeStart, rangeEnd) {
