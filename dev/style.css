@@ -1,0 +1,93 @@
+body {
+    background: #f4f4f4;
+}
+
+#contributor-mount {
+    max-height: 500px;
+    overflow: scroll;
+}
+
+.hf-font-md {
+    font-weight: 300;
+    line-height: 1.4;
+    font-size: 12px;
+}
+
+.hf-font-lg{
+    font-weight: 300;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.hf-font-xs {
+    font-weight: 300;
+    line-height: 1.4;
+    font-size: 10px;
+}
+
+.hf-font-xxs {
+    font-weight: 300;
+    line-height: 1.4;
+    font-size: 8px;
+}
+
+.bs-callout {
+    margin: 20px 0;
+    padding: 5px 15px 5px 15px;
+    border-left: 5px solid #eee;
+    overflow: auto;
+}
+
+.bs-callout h4 {
+  margin-top: 0;
+}
+
+.bs-callout p:last-child {
+  margin-bottom: 0;
+}
+
+.bs-callout code,
+.bs-callout .highlight {
+  background-color: #fff;
+}
+
+.hf-svg {
+    border: none;
+    background: #f4f4f4;
+}
+
+.hf-axislines-group {
+    stroke: #c1c1c1;
+    stroke-width: 0.5; 
+    stroke-opacity: .65; 
+    fill: aliceblue;
+    font-family: monospace; 
+    font-size: 10px;
+}
+
+.hf-timeline-base {
+    stroke: #c1c1c1;
+    stroke-width: 1px;
+    stroke-opacity: 0.65;
+    stroke-width: 0.5;
+}
+
+.hf-timeline-snapshot {
+    stroke: none;
+    fill-opacity: 0.25;
+}
+
+.hf-timeline-text {
+    fill: #8b8b8b;
+    stroke: #8b8b8b;
+    stroke-width: 0.5px;
+}
+
+.hf-axisline-g {
+    stroke-width: 0;
+    fill: #d4d4d4;
+}
+
+.hf-ilayer {
+    opacity: 0;
+}
