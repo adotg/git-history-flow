@@ -8,19 +8,20 @@
    
     <title>Development Test Page</title>
     
-    <link rel="stylesheet" 
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="./bootstrap.min.css" >
+    <link rel="stylesheet" href="./style.css" >
 </head>
 
 <body>
     <h3 class="text-center">Git History flow</h3>
    
-    <div id="viz-container" class="col-xs-12 col-sm-12 col-md-12 co-lg-12" style="height: 600px; background: #f4f4f4"></div>  
+    <div id="viz-container" class="col-xs-12 col-sm-12 col-md-10 co-lg-11" style="height: 500px; background: #f4f4f4"></div>  
+    <div id="contributors" class="col-xs-12 col-sm-12 col-md-2 co-lg-1" style=" background: #f4f4f4;">
+        <div class="" id="contributor-mount"> 
+            <p class = 'lead'>Contributors</p>
+        </div>
+    </div>  
     
-    <!--<div class="col-xs-1 col-sm-1 col-md-1 co-lg-1">-->
-    <!--</div> -->
     <div class="container">
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-2 co-lg-1">
@@ -38,64 +39,48 @@
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-8 co-lg-10">
-                <p class = 'lead'>Contributors</p>
+                <p class = 'lead'>Summary</p>
+                <div class="" id="summary-mount"> </div>
             </div>
         </div>
     </div>
-    <!--<div class="col-xs-1 col-sm-1 col-md-1 co-lg-1">-->
-    <!--</div> -->
-    
+    <div class="col-xs-12 col-sm-12 col-md-12 co-lg-12" style="height: 15px"></div>
     <script src="http://localhost:8181/webpack-dev-server.js"></script>
 	<script src="http://localhost:8181/git-history-flow.js"></script>
 
+	<script src="./handlebars-v4.0.5.js"></script>
+    <script id="contributor-template" type="text/x-handlebars-template">
+        <p class = 'lead'>Contributors ({{count}})</p>
+        <div class = 'hf-font-md'>Commits: {{commits}}</div>
+        {{#each contributor}}
+        <div class="col-xs-6 col-sm-3 col-md-12 col-lg-12">
+            <div class="bs-callout" style="border: 1px solid {{color}}; border-left: 5px solid {{color}}">
+                <div>
+                    <span class="hf-font-md">
+                        {{user.name}}
+                        <span class="hf-font-xxs">{{user.email}}</span>
+                    </span>
+                </div>
+                <div>
+                    <span class="hf-font-xs"># Commits: {{count}}</span>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+    <script id="summary-template" type="text/x-handlebars-template">
+        <div class="hf-font-lg">{{desc}}</div>
+        <div class="hf-font-xxs">{{commitId}}</div>
+        <div class="hf-font-lg">{{user.name}}</div>
+        <div class="hf-font-xxs">{{user.email}}</div>
+        <div class="hf-font-xs">{{timestamp}}</div>
+        <div class="hf-font-xs"> 
+            <span style="color: #28a745">{{addition}}</span> /
+            <span style="color: #cb2431">{{deletion}}</span>
+        </div>
+    </script>
+
 	<script src="./data.js" type="text/javascript"></script>
 	<script src="./main.js" type="text/javascript"></script>
-    <style type="text/css">
-        body {
-            background: #f4f4f4;
-        }
-
-        .hf-svg {
-            border: none;
-            background: #f4f4f4;
-        }
-
-        .hf-axislines-group {
-            stroke: #c1c1c1;
-            stroke-width: 0.5; 
-            stroke-opacity: .65; 
-            fill: aliceblue;
-            font-family: monospace; 
-            font-size: 10px;
-        }
-
-        .hf-timeline-base {
-            stroke: #c1c1c1;
-            stroke-width: 1px;
-            stroke-opacity: 0.65;
-            stroke-width: 0.5;
-        }
-
-        .hf-timeline-snapshot {
-            stroke: none;
-            fill-opacity: 0.25;
-        }
-
-        .hf-timeline-text {
-            fill: #8b8b8b;
-            stroke: #8b8b8b;
-            stroke-width: 0.5px;
-        }
-
-        .hf-axisline-g {
-            stroke-width: 0;
-            fill: #d4d4d4;
-        }
-
-        .hf-ilayer {
-            opacity: 0;
-        }
-
-    <style>
 </body>
 </html>
