@@ -127,7 +127,7 @@ diffable() {
 JSON_AS_STRING="[ "
 
 # Pretty print the log in the json format
-DIFF_COMMITS=`git log --pretty="{ \"commitId\": \"%h\", \"desc\": \"%s\", \"timestamp\": \"%ci\", \"user\": { \"name\": \"%cn\", \"email\": \"%ce\" } }" --reverse $1`
+DIFF_COMMITS=`git log --pretty="{ \"commitId\": \"%h\", \"desc\": \"%f\", \"timestamp\": \"%ci\", \"user\": { \"name\": \"%cn\", \"email\": \"%ce\" } }" --reverse $1`
 # Split the string sepatated by new line character in list
 IFS=$'\n' read -rd '' -a COMMITS_LIST <<<"$DIFF_COMMITS" 
 
