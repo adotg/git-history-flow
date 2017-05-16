@@ -5,6 +5,7 @@ import { default as store } from './store';
 import { Edge, EdgeSemantics, EdgePresentation } from './edge';
 import { SnapshotSemantics, SnapshotPresentation } from './snapshot';
 import { TimelineSemantics, TimelinePresentation } from './timeline';
+import watch from 'redux-watch';
 import { all } from './actions';
 
 const render = (conf, data) => {
@@ -45,7 +46,9 @@ const render = (conf, data) => {
 
     return {
         store: store,
-        all: all
+        watch: watch,
+        actions: all,
+        snapshots: snapshots
     };
 }
 
