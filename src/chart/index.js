@@ -92,7 +92,7 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
     y = d3
         .scaleLinear()
         .domain([0, yMax])
-        .range([0, height - 2 * padding.h]); // 50px for the timeline drawing
+        .range([0, height - padding.h]);
 
 
     transition = d3.transition()
@@ -107,7 +107,7 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
     };
     
     timeline.render(timelineG, {
-        y: height - padding.h
+        y: height
     }, params);
     snapshot.render(snapshotG, params);
     edge.render(flowG, params);
