@@ -1,5 +1,6 @@
 import { default as ContributionHunk } from '../contribution-hunk';
 import { default as utils } from '../utils';
+import { default as Color } from 'color';
 
 const Snapshot = class {
     constructor  (prevSnapshot = Snapshot.root(), data = null) {
@@ -32,7 +33,8 @@ const Snapshot = class {
     }
 
     _parse (data) {
-        let parsedData;
+        let parsedData,
+            color;
 
         if (!data) {
             return null;
@@ -40,6 +42,8 @@ const Snapshot = class {
         
         parsedData = Object.assign({}, data);
         parsedData.timestamp = utils.ISO8601toNativeDate(parsedData.timestamp);
+        color = Color(parsedData.color);
+        parsedData.flowColor = color.rgb().opaquer(-0.5);
        
         return parsedData;
     }
