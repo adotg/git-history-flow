@@ -113,6 +113,8 @@
             contributorBaseArr.push(contributorBase[key]);
         }
 
+        contributorBaseArr = contributorBaseArr.sort((m, n) => n.count - m.count);
+
         hbSrc = doc.getElementById('contributor-template').innerHTML;
         hbTemplate = win.Handlebars.compile(hbSrc);
         genHtml = hbTemplate({ contributor: contributorBaseArr, count: contributorBaseArr.length, 
