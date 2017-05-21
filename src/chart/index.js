@@ -17,7 +17,6 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         timeX,
         yMax,
         padding,
-        transition,
         params,
         allMS,
         iLayer,
@@ -80,7 +79,7 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         return {
             block: () => { elm.classed('hf-uirl-none', false).classed('hf-uirl-full', true); },
             unblock: () => { elm.classed('hf-uirl-none', true).classed('hf-uirl-full', false); }
-        }
+        };
     })(rLayer);
 
     x = d3
