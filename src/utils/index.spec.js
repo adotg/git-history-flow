@@ -12,7 +12,7 @@ describe('utils', function () {
         });
 
         it('is of size 24', function () {
-            expect(palette.size()).to.equal(16);
+            expect(palette.size()).to.equal(24);
         });
         
         it('has an iterator which rotates', function () {
