@@ -81,7 +81,6 @@ const SnapshotPresentation = class {
                     .attr('width', d => d.__width = d.__width || 0.5));
 
         graphics.map(graph => graph
-            .transition(this._dependencies.transition)
             .attr('x', d => d._plotXStartPos = x(xValFn(d, d.parentData))));
 
         return graphics;
@@ -118,11 +117,9 @@ const SnapshotPresentation = class {
                     switch(newVal) {
                     case 'COMMUNITY_VIEW':
                         this._graphics[0]
-                                .transition(this._dependencies.transition)
                                 .style('opacity', 1.0);
 
                         this._graphics[1]
-                                .transition(this._dependencies.transition)
                                 .attr('width', d => d.__width = 0.5)
                                 .style('fill', d => d.hunk.meta.color)
                                 .style('opacity', 1.0);
@@ -131,11 +128,9 @@ const SnapshotPresentation = class {
                     case 'LATEST_COMMIT_VIEW':
                     default:
                         this._graphics[0]
-                                .transition(this._dependencies.transition)
                                 .style('opacity', 0.5);
 
                         this._graphics[1]
-                                .transition(this._dependencies.transition)
                                 .attr('width', d => {
                                     if (d.hunk.recent) {
                                         return d.__width = 2;

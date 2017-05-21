@@ -53,7 +53,6 @@ const EdgePresentation = class {
             .merge(nestedGraphics);
 
         graphics
-            .transition(this._dependencies.transition)
             .attr('d', d => {
                 let boundary = boundaryFn(d);
                 return 'M' + x(boundary[0][0]) + ',' + y(boundary[0][1]) + 
@@ -97,14 +96,12 @@ const EdgePresentation = class {
                     switch(newVal) {
                     case 'COMMUNITY_VIEW':
                         this._graphics
-                                .transition(this._dependencies.transition)
                                 .style('fill', d => d.meta().color);
                         break;
 
                     case 'LATEST_COMMIT_VIEW':
                     default:
                         this._graphics
-                            .transition(this._dependencies.transition)
                             .style('fill', d => color(d.meta().color).fade(0.9));
                         break;
                     }
