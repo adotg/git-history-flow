@@ -1,5 +1,9 @@
 body {
-    background: #f4f4f4;
+    background: #e7e7e7;
+    color: #515151;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 #contributor-mount {
@@ -53,7 +57,7 @@ body {
 
 .hf-svg {
     border: none;
-    background: #f4f4f4;
+    background: transparent;
 }
 
 .hf-axislines-group {
@@ -65,18 +69,6 @@ body {
     font-size: 10px;
 }
 
-.hf-timeline-base {
-    stroke: #c1c1c1;
-    stroke-width: 1px;
-    stroke-opacity: 0.65;
-    stroke-width: 0.5;
-}
-
-.hf-timeline-snapshot {
-    stroke: none;
-    fill-opacity: 0.25;
-}
-
 .hf-timeline-text {
     fill: #8b8b8b;
     stroke: #8b8b8b;
@@ -85,9 +77,26 @@ body {
 
 .hf-axisline-g {
     stroke-width: 0;
-    fill: #d4d4d4;
+    fill: #dddddd;
 }
 
 .hf-ilayer {
     opacity: 0;
+}
+
+.hf-ui-restriction-layer {
+    position: absolute;
+    z-index: 999999;
+    /*background: rgba(175, 175, 175, 0.5);*/
+    background: #ffffff;
+}
+
+.hf-uirl-full {
+    width: 100%;
+    height: 100%
+}
+
+.hf-uirl-none {
+    width: 0%;
+    height: 0%
 }
