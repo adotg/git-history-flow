@@ -13,38 +13,40 @@
 </head>
 
 <body>
-    <h3 class="text-center">Git History flow</h3>
-   
-    <div id="viz-container" class="col-xs-12 col-sm-12 col-md-10 co-lg-11" style="height: 500px; background: #f4f4f4"></div>  
-    <div id="contributors" class="col-xs-12 col-sm-12 col-md-2 co-lg-1" style=" background: #f4f4f4;">
-        <div class="" id="contributor-mount"> 
-            <p class = 'lead'>Contributors</p>
-        </div>
-    </div>  
-    
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-2 co-lg-1">
-                <p class = 'lead'>X Axis</p>
-                <div class="btn-group" role="group" aria-label="..." id="axis-type">
-                    <button type="button" class="btn btn-default active" _value_="ordinal">Ordinal</button>
-                    <button type="button" class="btn btn-default" _value_="time">Time</button>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-2 co-lg-1">
-                <p class = 'lead'>Mode</p>
-                <div class="btn-group btn-group-xs" role="group" aria-label="..." id="mode">
-                    <button type="button" class="btn btn-default active" _value_="community">Community</button>
-                    <button type="button" class="btn btn-default" _value_="commit">Commit</button>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-8 co-lg-10">
-                <p class = 'lead'>Commit details</p>
-                <div class="" id="summary-mount"></div>
+    <div style="position: absolute; width:100%;">
+        <h3 class="text-center">Git History flow</h3>
+
+        <div id="viz-container" class="col-xs-12 col-sm-12 col-md-10 co-lg-11" style="height: 500px;"></div>
+        <div id="contributors" class="col-xs-12 col-sm-12 col-md-2 co-lg-1" >
+            <div class="" id="contributor-mount">
+                <p class = 'lead'>Contributors</p>
             </div>
         </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-2 co-lg-1">
+                    <p class = 'lead'>X Axis</p>
+                    <div class="btn-group" role="group" aria-label="..." id="axis-type">
+                        <button type="button" class="btn btn-default active" _value_="ordinal">Ordinal</button>
+                        <button type="button" class="btn btn-default" _value_="time">Time</button>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 co-lg-1">
+                    <p class = 'lead'>Mode</p>
+                    <div class="btn-group btn-group-xs" role="group" aria-label="..." id="mode">
+                        <button type="button" class="btn btn-default active" _value_="community">Community</button>
+                        <button type="button" class="btn btn-default" _value_="commit">Commit</button>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-8 co-lg-10">
+                    <p class = 'lead'>Commit details</p>
+                    <div class="" id="summary-mount"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 co-lg-12" style="height: 15px"></div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-12 co-lg-12" style="height: 15px"></div>
     <script src="http://localhost:8181/webpack-dev-server.js"></script>
 	<script src="http://localhost:8181/git-history-flow.js"></script>
 
@@ -80,7 +82,7 @@
         </div>
     </script>
 
-	<script src="./data.js" type="text/javascript"></script>
+	<script src="./data-bootstrap.js" type="text/javascript"></script>
 	<script src="./main.js" type="text/javascript"></script>
 </body>
 </html>
