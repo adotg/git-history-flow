@@ -15,7 +15,7 @@ const SnapshotSemantics = class {
         
         this.unsubscribe = this.presentation.actions().map(action => {
             let watcher = watch(this.store.getState, action.path);
-            return this.store.subscribe(watcher(action.executable));
+            return this.store.subscribe(() => requestAnimationFrame(watcher(action.executable)));
         });
         
         return this;
