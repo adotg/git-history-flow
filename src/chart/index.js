@@ -21,6 +21,8 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         params,
         allMS,
         iLayer,
+        rLayer,
+        screen,
         store = dependencies.store,
         data = snapshot.getData();
     
@@ -70,6 +72,17 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         .attr('width', width - 2 * padding.w)
         .attr('height', height - 2 * padding.h);
 
+    rLayer = d3.select('body')
+        .append('div')
+            .attr('class', 'hf-ui-restriction-layer');
+
+    screen = ((elm) => {
+        return {
+            block: () => { elm.classed('hf-uirl-none', false).classed('hf-uirl-full', true); },
+            unblock: () => { elm.classed('hf-uirl-none', true).classed('hf-uirl-full', false); }
+        }
+    })(rLayer);
+
     x = d3
         .scaleLinear()
         .domain([0, data.length - 1])
@@ -95,15 +108,12 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         .range([0, height - padding.h]);
 
 
-    transition = d3.transition()
-        .duration(750);
-
     params = {
         x: x,
         timeX: timeX,
         y: y,
-        transition: transition,
-        yMax: yMax
+        yMax: yMax,
+        screen: screen
     };
     
     timeline.render(timelineG, {
@@ -112,25 +122,27 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
     snapshot.render(snapshotG, params);
     edge.render(flowG, params);
 
-    allMS = snapshot.data.map(s => s.data.timestamp.getTime()); 
-    iLayer
-        .on('mousemove', function () {
-            let index, 
-                state = store.getState();
+    requestAnimationFrame(() => {
+        allMS = snapshot.data.map(s => s.data.timestamp.getTime());
+        iLayer
+            .on('mousemove', function () {
+                let index,
+                    state = store.getState();
 
-            if (state.xType === 'ORDINAL_X') {
-                index = Math.round(x.invert(d3.mouse(this)[0]));
-            } else if (state.xType === 'TIME_X') {
-                index = utils.search(allMS, Math.round(timeX.invert(d3.mouse(this)[0])));
-            } else {
-                index = null;
-            }
+                if (state.xType === 'ORDINAL_X') {
+                    index = Math.round(x.invert(d3.mouse(this)[0]));
+                } else if (state.xType === 'TIME_X') {
+                    index = utils.search(allMS, Math.round(timeX.invert(d3.mouse(this)[0])));
+                } else {
+                    index = null;
+                }
 
-            store.dispatch(focus(index)); 
-        })
-        .on('mouseout', function () {
-            store.dispatch(focus(null));
-        });
+                store.dispatch(focus(index));
+            })
+            .on('mouseout', function () {
+                store.dispatch(focus(null));
+            });
+    });
 
 }
 
