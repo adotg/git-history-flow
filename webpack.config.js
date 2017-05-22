@@ -1,11 +1,26 @@
 module.exports = {
-    entry: './src/git-history-flow.js',
+    entry: {
+        'git-history-flow': ['babel-polyfill', './src/git-history-flow.js'],
+        'main': ['./dev/main.js']
+    },
     output: {
         path: __dirname + '/out',
-        filename: 'git-history-flow.js',
+        filename: '[name].js',
         library: 'GitHistoryFlow',
         libraryTarget: 'umd',
         umdNamedDefine: true
+    },
+    module: {
+        loaders: [{
+        	test: /\.css$/,
+        	loader: "style!css"
+        }, {
+             test: /\.js$/,
+             loader: 'babel-loader',
+             query: {
+                 presets: ['es2015']
+             }
+		}]
     },
     devServer: {
         inline: true,
