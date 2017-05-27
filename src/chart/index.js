@@ -10,6 +10,7 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         historyFlowG,
         snapshotG,
         flowG,
+        focusMockerG,
         height,
         width,
         x,
@@ -21,7 +22,6 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         allMS,
         iLayer,
         rLayer,
-        screen,
         store = dependencies.store,
         data = snapshot.getData();
     
@@ -63,6 +63,10 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         .append('g')
             .attr('class', 'hf-flow-group');
 
+    focusMockerG = rootG
+        .append('g')
+            .attr('class', 'hf-mocker-group');
+
     iLayer = rootG
         .append('rect')
         .attr('class', 'hf-ilayer')
@@ -74,13 +78,6 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
     rLayer = d3.select('body')
         .append('div')
             .attr('class', 'hf-ui-restriction-layer');
-
-    screen = ((elm) => {
-        return {
-            block: () => { elm.classed('hf-uirl-none', false).classed('hf-uirl-full', true); },
-            unblock: () => { elm.classed('hf-uirl-none', true).classed('hf-uirl-full', false); }
-        };
-    })(rLayer);
 
     x = d3
         .scaleLinear()
@@ -112,7 +109,7 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         timeX: timeX,
         y: y,
         yMax: yMax,
-        screen: screen
+        focusMocker: focusMockerG
     };
     
     timeline.render(timelineG, {
