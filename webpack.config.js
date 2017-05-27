@@ -1,10 +1,10 @@
 module.exports = {
     entry: {
         'git-history-flow': ['babel-polyfill', './src/git-history-flow.js'],
-        'main': ['./dev/main.js']
+        'main': ['./docs/main.js']
     },
     output: {
-        path: __dirname + '/out',
+        path: __dirname + '/docs/out',
         filename: '[name].js',
         library: 'GitHistoryFlow',
         libraryTarget: 'umd',
@@ -24,6 +24,6 @@ module.exports = {
     },
     devServer: {
         inline: true,
-        contentBase: './dev'
+        contentBase: './docs'
     }
 };
