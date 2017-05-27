@@ -21,8 +21,8 @@ npm start
 
 ## Known issues
 
- - Not performance optimized in terms of memory usage, nodes creation, memory leaks
- - If the dataset is large, it freezes the browser
+ - Not performance optimized in terms of memory usage, nodes creation, memory leaks.
+ - Large dataset might cause the browser to slow down.
  - Performance is significantly slower in firefox.
 
 [1]: https://akash-goswami.github.io/git-history-flow/
