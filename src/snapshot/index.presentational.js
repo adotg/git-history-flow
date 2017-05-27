@@ -58,7 +58,6 @@ const SnapshotPresentation = class {
                     .attr('y', 0) 
                     .attr('height', y(this._dependencies.yMax)) 
                     .attr('width', 0.5) 
-                    .style('opacity', 0.0)
                 .merge(nestedAxisLineGraphics));
 
         nestedGraphics = rootGraphics
@@ -76,7 +75,6 @@ const SnapshotPresentation = class {
                 .append('rect')
                     .attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1)) 
                     .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
-                    .style('opacity', 0.0)
                 .merge(nestedGraphics)
                     .attr('width', d => d.__width = d.__width || 0.5));
 
@@ -116,26 +114,28 @@ const SnapshotPresentation = class {
 
                     switch(newVal) {
                     case 'COMMUNITY_VIEW':
-                        this._graphics[0]
+                        this._group.select('hf-axisline-g')
+                                .style('opacity', 1.0);
+
+                        this._group.select('hf-atomic-snapshot-g')
                                 .style('opacity', 1.0);
 
                         this._graphics[1]
-                                .attr('width', d => d.__width = 0.5)
-                                .style('fill', d => d.hunk.meta.color)
-                                .style('opacity', 1.0);
+                                .attr('width', d => 0.5)
+                                .style('fill', d => d.hunk.meta.color);
                         break;
 
                     case 'LATEST_COMMIT_VIEW':
                     default:
-                        this._graphics[0]
+                        this._group.select('hf-axisline-g')
                                 .style('opacity', 0.5);
 
                         this._graphics[1]
                                 .attr('width', d => {
                                     if (d.hunk.recent) {
-                                        return d.__width = 2;
+                                        return 2;
                                     } else {
-                                        return d.__width = 0.5;
+                                        return null;
                                     }
                                 })
                                 .style('fill', d => {
@@ -145,7 +145,6 @@ const SnapshotPresentation = class {
                                         return color(d.hunk.meta.color).fade(0.9);
                                     }
                                 })
-                                .style('opacity', 1.0);
                         break;
                     }
                 }
@@ -153,22 +152,59 @@ const SnapshotPresentation = class {
             {
                 path: 'focus',
                 executable: (newVal, oldVal) => {
+                    let focusMocker,
+                        nestedMocker,
+                        y,
+                        tx,
+                        data= [];
+
                     if (newVal === oldVal) {
                         return;
                     }
 
+                    focusMocker = this._dependencies.focusMocker;
+                    y = this._dependencies.y;
                     if (newVal === null || !isFinite(newVal)) {
-                        this._graphics[1]
-                            .attr('width', d => d.__width);
-
+                        focusMocker.attr('transform', d => 'translate(' + -9999 + ',0)');
                         return;
                     }
 
                     this._graphics[1]
-                        .attr('width', d => d.__width);
+                        .each(function (d) {
+                            let nestedMocker;
+                            if (d.groupIndex === newVal) {
+                                tx = d._plotXStartPos;
+                                data.push(d);
+                            }
+                        });
 
-                    this._graphics[1]
-                        .attr('width', d => (d.groupIndex === newVal ? 5 : d.__width));
+                    nestedMocker = focusMocker
+                        .selectAll('rect')
+                        .data(data);
+                    nestedMocker
+                        .exit()
+                            .remove();
+                    nestedMocker
+                        .enter()
+                        .append('rect')
+                            .attr('x', 0)
+                            .attr('width', 5)
+                        .merge(nestedMocker)
+                            .attr('y', d => d._plotYStartPos = y(d.hunk.range[0] - 1))
+                            .attr('height', d => y(d.hunk.range[1]) - d._plotYStartPos)
+                            .style('fill', d => {
+                                if (this._dependencies.store.getState().mode === 'COMMUNITY_VIEW') {
+                                    return d.hunk.meta.color;
+                                } else {
+                                    if (d.hunk.recent) {
+                                        return d.hunk.meta.color;
+                                    } else {
+                                        return color(d.hunk.meta.color).fade(0.9);
+                                    }
+                                }
+                            });
+                    focusMocker.attr('transform', d => 'translate(' + tx  + ',0)');
+                    data.length = 0;
                 }
             }
         ];

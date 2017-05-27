@@ -25,8 +25,9 @@ const SnapshotSemantics = class {
         return this.data;
     }
 
-    render (group, depencencies) {
-        this.presentation.render(group, this.store.getState(), depencencies);
+    render (group, dependencies) {
+        dependencies.store = this.store;
+        this.presentation.render(group, this.store.getState(), dependencies);
         return this;
     }
 };

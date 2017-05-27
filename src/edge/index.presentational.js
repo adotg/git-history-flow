@@ -42,6 +42,7 @@ const EdgePresentation = class {
             .enter()
             .append('g')
                 .attr('class', 'hf-atomic-flow-g')
+                .style('opacity', 0.5)
             .merge(rootGraphics)
                 .selectAll('path')
                 .data(d => d);
@@ -49,7 +50,6 @@ const EdgePresentation = class {
         graphics = nestedGraphics 
             .enter()
             .append('path')
-                .style('opacity', 0.5)
             .merge(nestedGraphics);
 
         graphics
