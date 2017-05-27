@@ -23358,6 +23358,7 @@ function chart(conf, snapshot, edge, timeline, dependencies) {
         historyFlowG = void 0,
         snapshotG = void 0,
         flowG = void 0,
+        focusMockerG = void 0,
         height = void 0,
         width = void 0,
         x = void 0,
@@ -23368,8 +23369,6 @@ function chart(conf, snapshot, edge, timeline, dependencies) {
         params = void 0,
         allMS = void 0,
         iLayer = void 0,
-        rLayer = void 0,
-        screen = void 0,
         store = dependencies.store,
         data = snapshot.getData();
 
@@ -23393,20 +23392,9 @@ function chart(conf, snapshot, edge, timeline, dependencies) {
 
     flowG = historyFlowG.append('g').attr('class', 'hf-flow-group');
 
+    focusMockerG = rootG.append('g').attr('class', 'hf-mocker-group');
+
     iLayer = rootG.append('rect').attr('class', 'hf-ilayer').attr('x', 0).attr('y', 0).attr('width', width - 2 * padding.w).attr('height', height - 2 * padding.h);
-
-    rLayer = d3.select('body').append('div').attr('class', 'hf-ui-restriction-layer');
-
-    screen = function (elm) {
-        return {
-            block: function block() {
-                elm.classed('hf-uirl-none', false).classed('hf-uirl-full', true);
-            },
-            unblock: function unblock() {
-                elm.classed('hf-uirl-none', true).classed('hf-uirl-full', false);
-            }
-        };
-    }(rLayer);
 
     x = d3.scaleLinear().domain([0, data.length - 1]).range([0, width - 2 * padding.w]);
 
@@ -23427,7 +23415,7 @@ function chart(conf, snapshot, edge, timeline, dependencies) {
         timeX: timeX,
         y: y,
         yMax: yMax,
-        screen: screen
+        focusMocker: focusMockerG
     };
 
     timeline.render(timelineG, {
@@ -23741,11 +23729,11 @@ var EdgePresentation = function () {
 
             rootGraphics = this._group.selectAll('.hf-atomic-flow-g').data(this._data);
 
-            nestedGraphics = rootGraphics.enter().append('g').attr('class', 'hf-atomic-flow-g').merge(rootGraphics).selectAll('path').data(function (d) {
+            nestedGraphics = rootGraphics.enter().append('g').attr('class', 'hf-atomic-flow-g').style('opacity', 0.5).merge(rootGraphics).selectAll('path').data(function (d) {
                 return d;
             });
 
-            graphics = nestedGraphics.enter().append('path').style('opacity', 0.5).merge(nestedGraphics);
+            graphics = nestedGraphics.enter().append('path').merge(nestedGraphics);
 
             graphics.attr('d', function (d) {
                 var boundary = boundaryFn(d);
@@ -24038,7 +24026,7 @@ var SnapshotPresentation = function () {
                 });
             });
 
-            graphics.push(nestedAxisLineGraphics.enter().append('rect').attr('y', 0).attr('height', y(this._dependencies.yMax)).attr('width', 0.5).style('opacity', 0.0).merge(nestedAxisLineGraphics));
+            graphics.push(nestedAxisLineGraphics.enter().append('rect').attr('y', 0).attr('height', y(this._dependencies.yMax)).attr('width', 0.5).merge(nestedAxisLineGraphics));
 
             nestedGraphics = rootGraphics.enter().append('g').attr('class', 'hf-atomic-snapshot-g').merge(rootGraphics).selectAll('rect').data(function (d, i) {
                 return d.hunks.map(function (hunk) {
@@ -24050,7 +24038,7 @@ var SnapshotPresentation = function () {
                 return d._plotYStartPos = y(d.hunk.range[0] - 1);
             }).attr('height', function (d) {
                 return y(d.hunk.range[1]) - d._plotYStartPos;
-            }).style('opacity', 0.0).merge(nestedGraphics).attr('width', function (d) {
+            }).merge(nestedGraphics).attr('width', function (d) {
                 return d.__width = d.__width || 0.5;
             }));
 
@@ -24098,24 +24086,24 @@ var SnapshotPresentation = function () {
 
                     switch (newVal) {
                         case 'COMMUNITY_VIEW':
-                            _this._graphics[0].style('opacity', 1.0);
+                            _this._group.select('hf-axisline-g').style('opacity', 1.0);
 
-                            _this._graphics[1].attr('width', function (d) {
-                                return d.__width = 0.5;
-                            }).style('fill', function (d) {
+                            _this._group.select('hf-atomic-snapshot-g').style('opacity', 1.0);
+
+                            _this._graphics[1].attr('width', 0.5).style('fill', function (d) {
                                 return d.hunk.meta.color;
-                            }).style('opacity', 1.0);
+                            });
                             break;
 
                         case 'LATEST_COMMIT_VIEW':
                         default:
-                            _this._graphics[0].style('opacity', 0.5);
+                            _this._group.select('hf-axisline-g').style('opacity', 0.5);
 
                             _this._graphics[1].attr('width', function (d) {
                                 if (d.hunk.recent) {
-                                    return d.__width = 2;
+                                    return 2;
                                 } else {
-                                    return d.__width = 0.5;
+                                    return null;
                                 }
                             }).style('fill', function (d) {
                                 if (d.hunk.recent) {
@@ -24123,32 +24111,56 @@ var SnapshotPresentation = function () {
                                 } else {
                                     return (0, _color2.default)(d.hunk.meta.color).fade(0.9);
                                 }
-                            }).style('opacity', 1.0);
+                            });
                             break;
                     }
                 }
             }, {
                 path: 'focus',
                 executable: function executable(newVal, oldVal) {
+                    var focusMocker = void 0,
+                        nestedMocker = void 0,
+                        y = void 0,
+                        tx = void 0,
+                        data = [];
+
                     if (newVal === oldVal) {
                         return;
                     }
 
+                    focusMocker = _this._dependencies.focusMocker;
+                    y = _this._dependencies.y;
                     if (newVal === null || !isFinite(newVal)) {
-                        _this._graphics[1].attr('width', function (d) {
-                            return d.__width;
-                        });
-
+                        focusMocker.attr('transform', 'translate(' + -9999 + ',0)');
                         return;
                     }
 
-                    _this._graphics[1].attr('width', function (d) {
-                        return d.__width;
+                    _this._graphics[1].each(function (d) {
+                        if (d.groupIndex === newVal) {
+                            tx = d._plotXStartPos;
+                            data.push(d);
+                        }
                     });
 
-                    _this._graphics[1].attr('width', function (d) {
-                        return d.groupIndex === newVal ? 5 : d.__width;
+                    nestedMocker = focusMocker.selectAll('rect').data(data);
+                    nestedMocker.exit().remove();
+                    nestedMocker.enter().append('rect').attr('x', 0).attr('width', 5).merge(nestedMocker).attr('y', function (d) {
+                        return d._plotYStartPos = y(d.hunk.range[0] - 1);
+                    }).attr('height', function (d) {
+                        return y(d.hunk.range[1]) - d._plotYStartPos;
+                    }).style('fill', function (d) {
+                        if (_this._dependencies.store.getState().mode === 'COMMUNITY_VIEW') {
+                            return d.hunk.meta.color;
+                        } else {
+                            if (d.hunk.recent) {
+                                return d.hunk.meta.color;
+                            } else {
+                                return (0, _color2.default)(d.hunk.meta.color).fade(0.9);
+                            }
+                        }
                     });
+                    focusMocker.attr('transform', 'translate(' + tx + ',0)');
+                    data.length = 0;
                 }
             }];
         }
@@ -24216,8 +24228,9 @@ var SnapshotSemantics = function () {
         }
     }, {
         key: 'render',
-        value: function render(group, depencencies) {
-            this.presentation.render(group, this.store.getState(), depencencies);
+        value: function render(group, dependencies) {
+            dependencies.store = this.store;
+            this.presentation.render(group, this.store.getState(), dependencies);
             return this;
         }
     }]);
