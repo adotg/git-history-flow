@@ -21,7 +21,6 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         params,
         allMS,
         iLayer,
-        rLayer,
         store = dependencies.store,
         data = snapshot.getData();
     
@@ -74,10 +73,6 @@ function chart (conf, snapshot, edge, timeline, dependencies) {
         .attr('y', 0)
         .attr('width', width - 2 * padding.w)
         .attr('height', height - 2 * padding.h);
-
-    rLayer = d3.select('body')
-        .append('div')
-            .attr('class', 'hf-ui-restriction-layer');
 
     x = d3
         .scaleLinear()

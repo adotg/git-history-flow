@@ -121,7 +121,7 @@ const SnapshotPresentation = class {
                                 .style('opacity', 1.0);
 
                         this._graphics[1]
-                                .attr('width', d => 0.5)
+                                .attr('width', 0.5)
                                 .style('fill', d => d.hunk.meta.color);
                         break;
 
@@ -144,7 +144,7 @@ const SnapshotPresentation = class {
                                     } else {
                                         return color(d.hunk.meta.color).fade(0.9);
                                     }
-                                })
+                                });
                         break;
                     }
                 }
@@ -165,13 +165,12 @@ const SnapshotPresentation = class {
                     focusMocker = this._dependencies.focusMocker;
                     y = this._dependencies.y;
                     if (newVal === null || !isFinite(newVal)) {
-                        focusMocker.attr('transform', d => 'translate(' + -9999 + ',0)');
+                        focusMocker.attr('transform', 'translate(' + -9999 + ',0)');
                         return;
                     }
 
                     this._graphics[1]
                         .each(function (d) {
-                            let nestedMocker;
                             if (d.groupIndex === newVal) {
                                 tx = d._plotXStartPos;
                                 data.push(d);
@@ -203,7 +202,7 @@ const SnapshotPresentation = class {
                                     }
                                 }
                             });
-                    focusMocker.attr('transform', d => 'translate(' + tx  + ',0)');
+                    focusMocker.attr('transform', 'translate(' + tx  + ',0)');
                     data.length = 0;
                 }
             }
