@@ -25,4 +25,4 @@ npm start
  - Large dataset might cause the browser to slow down.
  - Performance is significantly slower in firefox.
 
-[1]: https://akash-goswami.github.io/git-history-flow/
+[1]: https://adotg.github.io/git-history-flow/
